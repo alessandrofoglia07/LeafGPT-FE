@@ -22,9 +22,10 @@ const LoginPage = () => {
         setPassword(value);
     };
 
-    const handleConfirm = (e: React.FormEvent) => {
+    const handleConfirm = async (e: React.FormEvent) => {
         e.preventDefault();
-        // TODO: Add login logic with backend
+        const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+        console.log(res.data);
     };
 
     return (

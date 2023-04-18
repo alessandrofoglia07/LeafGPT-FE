@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Typography, TextField, Button, Link, Snackbar, Alert, Stack, IconButton } from '@mui/material';
 import Visibility from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOff from '@mui/icons-material/VisibilityOffOutlined';
@@ -11,6 +10,13 @@ const SignupPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [emailAlreadyExists, setEmailAlreadyExists] = useState(false);
+    const [verificationEmailSent, setVerificationEmailSent] = useState(false);
+    const [passwordTooShort, setPasswordTooShort] = useState(false);
+    const [emailNotvalid, setEmailNotvalid] = useState(false);
+
+    const emailRegex =
+        /^("(?:[!#-[\]-\u{10FFFF}]|\\[\t -\u{10FFFF}])*"|[!#-'*+\-/-9=?A-Z^-\u{10FFFF}](?:\.?[!#-'*+\-/-9=?A-Z^-\u{10FFFF}])*)@([!#-'*+\-/-9=?A-Z^-\u{10FFFF}](?:\.?[!#-'*+\-/-9=?A-Z^-\u{10FFFF}])*|\[[!-Z^-\u{10FFFF}]*\])$/u;
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
@@ -22,9 +28,39 @@ const SignupPage = () => {
         setPassword(value);
     };
 
-    const handleConfirm = (e: React.FormEvent) => {
+    const handleConfirm = async (e: React.FormEvent) => {
         e.preventDefault();
-        // TODO: Add signup logic with backend
+        // if password is less than 8 characters, show error
+        if (password.length < 8) {
+            setPasswordTooShort(true);
+            return;
+        }
+        // if email is not valid, show error
+        if (!emailRegex.test(email)) {
+            setEmailNotvalid(true);
+            return;
+        }
+        // if email is valid and password is at least 8 characters, send email
+        const res = await axios.post('http://localhost:5000/api/auth/sendVerificationEmail', { email, password });
+        console.log(res.data);
+        // if email is already registered, show error
+        if (res.data.message === 'Email already registered') {
+            setEmailAlreadyExists(true);
+            return;
+        }
+        // if email is not registered, send verification email
+        if (res.data.message === 'Verification email sent') {
+            setVerificationEmailSent(true);
+            return;
+        }
+    };
+
+    // close alerts
+    const handleAlertClose = () => {
+        setEmailAlreadyExists(false);
+        setVerificationEmailSent(false);
+        setPasswordTooShort(false);
+        setEmailNotvalid(false);
     };
 
     return (
@@ -81,6 +117,30 @@ const SignupPage = () => {
                     </ThemeProvider>
                 </Stack>
             </form>
+            <Snackbar open={verificationEmailSent} autoHideDuration={8000} onClose={handleAlertClose}>
+                <Alert onClose={handleAlertClose} severity='success' variant='filled'>
+                    You've been sent a confirmation email. Please check your inbox.
+                </Alert>
+            </Snackbar>
+            <Snackbar open={emailAlreadyExists} autoHideDuration={8000} onClose={handleAlertClose}>
+                <Alert onClose={handleAlertClose} severity='error' variant='filled'>
+                    This email is already registered. Go to{' '}
+                    <Link href='/auth/login' sx={{ color: 'white' }}>
+                        log in
+                    </Link>
+                    .
+                </Alert>
+            </Snackbar>
+            <Snackbar open={passwordTooShort} autoHideDuration={8000} onClose={handleAlertClose}>
+                <Alert onClose={handleAlertClose} severity='error' variant='filled'>
+                    Password must contain at least 8 characters.
+                </Alert>
+            </Snackbar>
+            <Snackbar open={emailNotvalid} autoHideDuration={8000} onClose={handleAlertClose}>
+                <Alert onClose={handleAlertClose} severity='error' variant='filled'>
+                    Please enter a valid email address.
+                </Alert>
+            </Snackbar>
         </div>
     );
 };
