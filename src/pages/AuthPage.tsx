@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../App.css';
 import { Typography, Button, Stack } from '@mui/material';
+import { useAuthUser } from 'react-auth-kit';
+import { useNavigate } from 'react-router-dom';
 
 const AuthPage = () => {
+    const auth = useAuthUser();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (auth()) {
+            navigate('/');
+        }
+    });
     return (
         <div id='AuthPage' className='centered'>
             <Stack display='flex' justifyContent='center' textAlign='center' sx={{ position: 'relative', bottom: '30px' }}>
