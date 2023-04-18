@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { Typography, TextField, Button, Link, Snackbar, Alert, Stack, IconButton } from '@mui/material';
-import Visibility from '@mui/icons-material/VisibilityOutlined';
-import VisibilityOff from '@mui/icons-material/VisibilityOffOutlined';
+import { Stack, Typography, TextField, Button, Link, Snackbar, Alert, IconButton } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import forestTheme from '../forestTheme';
+import Visibility from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOff from '@mui/icons-material/VisibilityOffOutlined';
 import axios from 'axios';
 
-const SignupPage = () => {
+const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -24,21 +24,18 @@ const SignupPage = () => {
 
     const handleConfirm = (e: React.FormEvent) => {
         e.preventDefault();
-        // TODO: Add signup logic with backend
+        // TODO: Add login logic with backend
     };
 
     return (
-        <div id='SignupPage' style={{ backgroundColor: 'white', width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center' }}>
+        <div id='LoginPage' style={{ width: '100vw', height: '100vh', backgroundColor: 'white', display: 'flex', justifyContent: 'center' }}>
             <Typography variant='h4' sx={{ mt: '30px', position: 'absolute', pointerEvents: 'none' }}>
                 🍀
             </Typography>
             <form autoComplete='off' onSubmit={handleConfirm}>
-                <Stack spacing={2} direction='column' textAlign='center' alignItems='center' sx={{ width: '100%', maxWidth: '350px', mt: '250px' }}>
-                    <Typography variant='h4' sx={{ fontFamily: 'Noto Sans', letterSpacing: '-1px' }}>
-                        <b>Create your account</b>
-                    </Typography>
-                    <Typography variant='body2' sx={{ fontFamily: 'Noto Sans' }}>
-                        Please note that you will be sent a confirmation email to verify your account.
+                <Stack spacing={2} direction='column' textAlign='center' alignItems='center' sx={{ width: '100%', maxWidth: '350px', mt: '270px' }}>
+                    <Typography variant='h4' sx={{ fontFamily: 'Noto Sans', letterSpacing: '-1px', width: '350px', mb: '20px' }}>
+                        <b>Welcome back</b>
                     </Typography>
                     <ThemeProvider theme={forestTheme}>
                         <TextField
@@ -67,12 +64,11 @@ const SignupPage = () => {
                                     </IconButton>
                                 )
                             }}
-                            helperText='Password must contain at least 8 characters.'
                         />
-                        <Button variant='contained' type='submit' color='primary' sx={{ width: 'calc(100% - 20px)', height: '50px' }}>
+                        <Button variant='contained' type='submit' color='primary' sx={{ width: 'calc(100% - 20px)', height: '50px', top: '10px' }}>
                             Continue
                         </Button>
-                        <Typography variant='body2' sx={{ fontFamily: 'Noto Sans' }}>
+                        <Typography variant='body2' sx={{ fontFamily: 'Noto Sans', top: '10px' }}>
                             Already have an account?{' '}
                             <Link color='primary' href='/auth/login' sx={{ textDecoration: 'none' }}>
                                 Log in
@@ -85,4 +81,4 @@ const SignupPage = () => {
     );
 };
 
-export default SignupPage;
+export default LoginPage;
