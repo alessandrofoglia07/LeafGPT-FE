@@ -7,26 +7,3 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
-
-.typographyAuthPage {
-    font-family: 'Noto Sans', sans-serif;
-    color: white;
-    margin-top: 10px;
-}
-
-.typographyAuthPageBtn {
-    font-family: 'Noto Sans', sans-serif;
-    color: white;
-}
-
-.btnAuthPage {
-    text-transform: none;
-    background-color: #00A67E;
-    border-radius: 0.25rem;
-    height: 35px;
-    margin-left: 10px;
-}
-
-.btnAuthPage:hover {
-    background-color: #1A7F64;
-}
