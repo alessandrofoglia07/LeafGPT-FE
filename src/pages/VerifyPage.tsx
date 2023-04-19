@@ -4,15 +4,17 @@ import axios from 'axios';
 import { Typography } from '@mui/material';
 
 const VerifyPage = () => {
-    const { token } = useParams();
+    const { token } = useParams<string>();
     const [verificationResult, setVerificationResult] = useState<any>(null);
 
     useEffect(() => {
+        if (verificationResult !== null) {
+            return;
+        }
+
         const verifyEmail = async () => {
             try {
-                if (verificationResult) return;
                 const res = await axios.get(`http://localhost:5000/api/auth/verify/${token}`);
-                console.log(res.data.message);
                 if (res && res.data) {
                     setVerificationResult(res.data.message);
                 } else {
@@ -25,10 +27,9 @@ const VerifyPage = () => {
                 return;
             }
         };
-
         verifyEmail();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [token]);
+    }, []);
 
     return (
         <div id='VerifyPage'>

@@ -114,10 +114,10 @@ const LoginPage = () => {
                         <Button variant='contained' type='submit' color='primary' sx={{ width: 'calc(100% - 20px)', height: '50px', top: '10px' }}>
                             Continue
                         </Button>
-                        <Typography variant='body2' sx={{ fontFamily: 'Noto Sans', top: '10px' }}>
-                            Already have an account?{' '}
-                            <Link color='primary' href='/auth/login' sx={{ textDecoration: 'none' }}>
-                                Log in
+                        <Typography variant='body2' sx={{ fontFamily: 'Noto Sans', position: 'relative', top: '10px' }}>
+                            Don't have an account?{' '}
+                            <Link color='primary' href='/auth/signup' sx={{ textDecoration: 'none' }}>
+                                Sign up
                             </Link>
                         </Typography>
                     </ThemeProvider>
