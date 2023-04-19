@@ -5,6 +5,7 @@ import AuthPage from './pages/AuthPage';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import VerifyPage from './pages/VerifyPage';
+import MainPage from './pages/MainPage';
 import { AuthProvider, RequireAuth } from 'react-auth-kit';
 
 const App = () => {
@@ -17,7 +18,7 @@ const App = () => {
                             path='/'
                             element={
                                 <RequireAuth loginPath='/auth/login'>
-                                    <div>Home</div>
+                                    <MainPage />
                                 </RequireAuth>
                             }
                         />

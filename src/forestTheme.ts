@@ -10,6 +10,9 @@ const forestTheme = createTheme({
         },
         error: {
             main: '#D00E17'
+        },
+        info: {
+            main: '#FFFFFF'
         }
     }
 });
