@@ -7,3 +7,26 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+/* ===== Scrollbar CSS ===== */
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #565869 #ffffff00;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #ffffff00;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #565869;
+    border-radius: 20px;
+    border: 3px solid #ffffff00;
+}

@@ -1,6 +1,7 @@
 import React from 'react';
 import SideBar from '../components/sideBar';
 import Footer from '../components/footer';
+import Center from '../components/center';
 
 const MainPage = () => {
     return (
@@ -8,8 +9,8 @@ const MainPage = () => {
             <div id='side' style={{ width: '260px', height: '100%' }}>
                 <SideBar />
             </div>
-            <div id='main'>
-                <div id='mainPage'></div>
+            <div id='main' style={{ width: 'calc(100vw - 260px)', height: '100vh' }}>
+                <Center />
                 <Footer />
             </div>
         </div>

@@ -1,6 +1,6 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme, Theme } from "@mui/material/styles";
 
-const forestTheme = createTheme({
+const forestTheme: Theme = createTheme({
     palette: {
         primary: {
             main: '#00A67E'

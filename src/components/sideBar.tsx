@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Button, Stack, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
@@ -10,6 +10,25 @@ import forestTheme from '../forestTheme';
 import axios from 'axios';
 
 const SideBar = () => {
+    const [chats, setChats] = useState<any[]>([]);
+
+    useEffect(() => {
+        setChats([
+            {
+                id: 1,
+                name: 'Chat 1'
+            },
+            {
+                id: 2,
+                name: 'Chat 2'
+            },
+            {
+                id: 3,
+                name: 'Chat 3'
+            }
+        ]);
+    }, []);
+
     return (
         <div id='SideBar'>
             <AppBar position='static' sx={{ bgcolor: '#202123', height: '100vh', width: '260px' }}>
@@ -21,40 +40,30 @@ const SideBar = () => {
                                 <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans', position: 'relative', right: '60px' }}>New chat</Typography>
                             </Button>
                             <div style={{ marginTop: '10px', overflowY: 'auto', height: 'calc(100% - 179px)' }}>
-                                <Button
-                                    variant='text'
-                                    color='info'
-                                    sx={{ textTransform: 'none', height: '46px', width: '244px', mb: '5px', borderRadius: '5px', justifyContent: 'left', ml: '7px' }}
-                                    startIcon={<ChatBubbleOutlineRoundedIcon fontSize='small' sx={{ ml: '7px' }} />}>
-                                    <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>Chat 1</Typography>
-                                </Button>
-                                <Button
-                                    variant='text'
-                                    color='info'
-                                    sx={{ textTransform: 'none', height: '46px', width: '244px', mb: '5px', borderRadius: '5px', justifyContent: 'left', ml: '7px' }}
-                                    startIcon={<ChatBubbleOutlineRoundedIcon fontSize='small' sx={{ ml: '7px' }} />}>
-                                    <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>Chat 2</Typography>
-                                </Button>
-                                <Button
-                                    variant='text'
-                                    color='info'
-                                    sx={{ textTransform: 'none', height: '46px', width: '244px', mb: '5px', borderRadius: '5px', justifyContent: 'left', ml: '7px' }}
-                                    startIcon={<ChatBubbleOutlineRoundedIcon fontSize='small' sx={{ ml: '7px' }} />}>
-                                    <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>Chat 3</Typography>
-                                </Button>
+                                {chats.map((chat) => (
+                                    <Button
+                                        key={chat.id}
+                                        variant='text'
+                                        color='info'
+                                        sx={{ textTransform: 'none', height: '46px', width: '244px', mb: '5px', borderRadius: '5px', justifyContent: 'left', ml: '7px' }}
+                                        startIcon={<ChatBubbleOutlineRoundedIcon fontSize='small' sx={{ ml: '7px' }} />}
+                                        href={`/c/${chat.id}`}>
+                                        <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>{chat.name}</Typography>
+                                    </Button>
+                                ))}
                             </div>
-                            <div style={{ position: 'fixed', bottom: '0px', borderTop: '1px solid #4D4D4F' }}>
+                            <div style={{ position: 'absolute', bottom: '0px', borderTop: '1px solid #4D4D4F', right: '23px' }}>
                                 <Button
                                     variant='text'
                                     color='info'
-                                    sx={{ textTransform: 'none', height: '46px', width: '244px', mb: '5px', borderRadius: '5px', justifyContent: 'left', ml: '7px', mt: '5px' }}
+                                    sx={{ textTransform: 'none', height: '46px', width: '244px', mb: '5px', borderRadius: '5px', justifyContent: 'left', ml: '25px', mt: '5px' }}
                                     startIcon={<DeleteOutlinedIcon fontSize='small' sx={{ ml: '7px' }} />}>
                                     <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>Clear conversations</Typography>
                                 </Button>
                                 <Button
                                     variant='text'
                                     color='info'
-                                    sx={{ textTransform: 'none', height: '46px', width: '244px', mb: '10px', borderRadius: '5px', justifyContent: 'left', ml: '7px' }}
+                                    sx={{ textTransform: 'none', height: '46px', width: '244px', mb: '10px', borderRadius: '5px', justifyContent: 'left', ml: '25px' }}
                                     startIcon={<LogoutRoundedIcon fontSize='small' sx={{ ml: '11px' }} />}>
                                     <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>Log out</Typography>
                                 </Button>

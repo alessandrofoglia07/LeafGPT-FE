@@ -17,7 +17,7 @@ const App = () => {
                         <Route
                             path='/'
                             element={
-                                <RequireAuth loginPath='/auth/login'>
+                                <RequireAuth loginPath='/auth'>
                                     <MainPage />
                                 </RequireAuth>
                             }
