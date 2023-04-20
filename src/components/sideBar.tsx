@@ -35,7 +35,17 @@ const SideBar = () => {
                 <Toolbar sx={{ width: '100%', height: '100%', position: 'relative', right: '25px' }}>
                     <Stack direction='column' display='flex' alignItems='center' spacing={2} sx={{ width: '100%', height: '100%' }}>
                         <ThemeProvider theme={forestTheme}>
-                            <Button variant='outlined' color='info' sx={{ textTransform: 'none', height: '46px', width: '244px', mt: '10px', borderRadius: '5px' }}>
+                            <Button
+                                variant='outlined'
+                                color='info'
+                                sx={{
+                                    textTransform: 'none',
+                                    height: '46px',
+                                    width: '244px',
+                                    mt: '10px',
+                                    borderRadius: '5px',
+                                    borderColor: '#555559'
+                                }}>
                                 <AddIcon fontSize='small' sx={{ position: 'relative', right: '70px', bottom: '1px' }} />
                                 <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans', position: 'relative', right: '60px' }}>New chat</Typography>
                             </Button>

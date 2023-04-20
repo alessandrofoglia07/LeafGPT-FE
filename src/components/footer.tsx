@@ -1,32 +1,19 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { Typography, TextField, IconButton, Stack } from '@mui/material';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
-import { styled } from '@mui/material/styles';
 
-const CustomTextField = styled(TextField)(({ theme }) => ({
-    maxWidth: '768px',
-    width: '90%',
-    height: '50px',
-    backgroundColor: '#40414F',
-    borderRadius: '5px',
-    marginBottom: '10px',
-    '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#303038' // border color
-    },
-    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#303038' // keep border color the same
-    },
-    '& .MuiInputLabel-root.Mui-focused': {
-        color: 'inherit' // keep label color the same
-    }
-}));
-
-const Footer = () => {
+const Footer = (props: { setHeight: (height: number) => void }) => {
     const [input, setInput] = useState<string>('');
+    const [height, setHeight] = useState<number>(0);
+    const [pasteHandler, setPasteHandler] = useState<boolean>(false);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
+        if (value.length < input.length) {
+            console.log('backspace');
+            setPasteHandler(true);
+            setTimeout(() => setPasteHandler(false), 100);
+        }
         setInput(value);
     };
 
@@ -40,9 +27,37 @@ const Footer = () => {
         }
     };
 
+    const getFooterHeight = () => {
+        const footer = document.getElementById('Footer');
+        if (footer) {
+            return footer.clientHeight;
+        } else {
+            return 0;
+        }
+    };
+
+    useEffect(() => {
+        const newHeight = getFooterHeight();
+        if (newHeight !== height) {
+            setHeight(newHeight);
+            props.setHeight(newHeight);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [input, pasteHandler]);
+
     const handleSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
         e?.preventDefault();
         setTimeout(() => setInput(''), 1);
+    };
+
+    const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+        if (pasteHandler === false) {
+            setPasteHandler(true);
+            setTimeout(() => setPasteHandler(false), 100);
+        } else {
+            e.preventDefault();
+            return;
+        }
     };
 
     return (
@@ -56,6 +71,7 @@ const Footer = () => {
                         value={input}
                         onChange={handleInputChange}
                         onKeyDown={handleEnter}
+                        onPaste={handlePaste}
                         sx={{
                             maxWidth: '768px',
                             width: '90%',
@@ -76,7 +92,8 @@ const Footer = () => {
                             },
                             '& .MuiInputBase-input': {
                                 fontSize: '16px',
-                                lineHeight: '1'
+                                lineHeight: '1',
+                                width: 'calc(100% - 40px)'
                             }
                         }}
                         InputProps={{
