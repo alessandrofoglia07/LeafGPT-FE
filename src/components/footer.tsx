@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, TextField, IconButton, Stack } from '@mui/material';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
+import axios from 'axios';
+import { useAuthHeader } from 'react-auth-kit';
 
-const Footer = (props: { setHeight: (height: number) => void }) => {
+const Footer = (props: { setHeight: (height: number) => void; newInput: string }) => {
+    const authHeader = useAuthHeader();
+
     const [input, setInput] = useState<string>('');
     const [height, setHeight] = useState<number>(0);
     const [pasteHandler, setPasteHandler] = useState<boolean>(false);
@@ -10,12 +14,18 @@ const Footer = (props: { setHeight: (height: number) => void }) => {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
         if (value.length < input.length) {
-            console.log('backspace');
             setPasteHandler(true);
             setTimeout(() => setPasteHandler(false), 100);
         }
         setInput(value);
     };
+
+    useEffect(() => {
+        if (props.newInput !== '') {
+            const value = props.newInput.slice(1, props.newInput.length - 1);
+            setInput(value);
+        }
+    }, [props]);
 
     const handleEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key === 'Enter' && e.shiftKey === false) {
@@ -45,9 +55,16 @@ const Footer = (props: { setHeight: (height: number) => void }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [input, pasteHandler]);
 
-    const handleSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
         e?.preventDefault();
         setTimeout(() => setInput(''), 1);
+        const message = input.trim();
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const chatGPTResponse = await axios.post(
+            'http://localhost:5000/api/chat/createMessage',
+            { message: { author: 'user', content: message }, chatID: undefined },
+            { headers: { Authorization: authHeader() } }
+        );
     };
 
     const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
@@ -66,6 +83,7 @@ const Footer = (props: { setHeight: (height: number) => void }) => {
                 <Stack direction='column' display='flex' alignItems='center' sx={{ width: '100%', height: '100%' }}>
                     <TextField
                         id='input'
+                        autoFocus
                         placeholder='Send a message...'
                         variant='outlined'
                         value={input}
@@ -119,8 +137,8 @@ const Footer = (props: { setHeight: (height: number) => void }) => {
                         }}
                         multiline
                     />
-                    <Typography variant='body2' sx={{ color: '#929398', fontFamily: 'Noto Sans', fontSize: '12px', mb: '10px' }}>
-                        Free Research Preview. LeafGPT may produce inaccurate information about people, places, or facts.
+                    <Typography variant='body2' sx={{ color: '#929398', fontFamily: 'Noto Sans', fontSize: '12px', mb: '15px' }}>
+                        Powered by GPT-3.5. LeafGPT may produce inaccurate information about people, places, or facts.
                     </Typography>
                 </Stack>
             </form>

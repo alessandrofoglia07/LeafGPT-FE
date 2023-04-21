@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Button, Stack, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -8,26 +7,31 @@ import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { ThemeProvider } from '@mui/material/styles';
 import forestTheme from '../forestTheme';
 import axios from 'axios';
+import { useAuthHeader } from 'react-auth-kit';
+import { useNavigate } from 'react-router-dom';
 
 const SideBar = () => {
+    const authHeader = useAuthHeader();
+    const navigate = useNavigate();
+
     const [chats, setChats] = useState<any[]>([]);
 
+    const getChats = async () => {
+        try {
+            const res = await axios.get('http://localhost:5000/api/chat/getChats', { headers: { Authorization: authHeader() } });
+            setChats(res.data);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     useEffect(() => {
-        setChats([
-            {
-                id: 1,
-                name: 'Chat 1'
-            },
-            {
-                id: 2,
-                name: 'Chat 2'
-            },
-            {
-                id: 3,
-                name: 'Chat 3'
-            }
-        ]);
-    }, []);
+        getChats();
+    });
+
+    const handleNewChat = () => {
+        navigate('/');
+    };
 
     return (
         <div id='SideBar'>
@@ -45,7 +49,8 @@ const SideBar = () => {
                                     mt: '10px',
                                     borderRadius: '5px',
                                     borderColor: '#555559'
-                                }}>
+                                }}
+                                onClick={handleNewChat}>
                                 <AddIcon fontSize='small' sx={{ position: 'relative', right: '70px', bottom: '1px' }} />
                                 <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans', position: 'relative', right: '60px' }}>New chat</Typography>
                             </Button>

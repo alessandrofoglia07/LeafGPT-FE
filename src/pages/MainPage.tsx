@@ -5,9 +5,15 @@ import Center from '../components/center';
 
 const MainPage = () => {
     const [footerHeight, setFooterHeight] = React.useState<number>(0);
+    const [newInput, setNewInput] = React.useState<string>('');
 
     const handleHeightChange = (height: number) => {
         setFooterHeight(height);
+    };
+
+    const setInput = (input: string) => {
+        setNewInput(input);
+        setTimeout(() => setNewInput(''), 1);
     };
 
     return (
@@ -16,8 +22,8 @@ const MainPage = () => {
                 <SideBar />
             </div>
             <div id='main' style={{ width: 'calc(100vw - 260px)', height: '100vh' }}>
-                <Center footerHeight={footerHeight} />
-                <Footer setHeight={handleHeightChange} />
+                <Center setInput={setInput} footerHeight={footerHeight} />
+                <Footer setHeight={handleHeightChange} newInput={newInput} />
             </div>
         </div>
     );
