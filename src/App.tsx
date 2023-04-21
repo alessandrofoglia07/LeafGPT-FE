@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage';
 import VerifyPage from './pages/VerifyPage';
 import MainPage from './pages/MainPage';
 import { AuthProvider, RequireAuth } from 'react-auth-kit';
+import ChatPage from './pages/ChatPage';
 
 const App = () => {
     return (
@@ -22,6 +23,7 @@ const App = () => {
                                 </RequireAuth>
                             }
                         />
+                        <Route path='/c/:id' element={<ChatPage />} />
                         <Route path='/auth' element={<AuthPage />} />
                         <Route path='/auth/signup' element={<SignupPage />} />
                         <Route path='/auth/login' element={<LoginPage />} />
