@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
 import { Typography, IconButton, Stack } from '@mui/material';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
@@ -29,7 +28,7 @@ const ChatPage = () => {
     };
 
     useEffect(() => {
-        setHeight(`calc(100vh - ${footerHeight + 64}px)`);
+        setHeight(`calc(100vh - ${footerHeight}px)`);
     }, [footerHeight]);
 
     const getMessages = async () => {
@@ -55,6 +54,7 @@ const ChatPage = () => {
         socket.on('newMessage', (data: { chatID: string }) => {
             if (data.chatID === id) {
                 getMessages();
+                console.log(messages);
             }
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -68,26 +68,104 @@ const ChatPage = () => {
             <div id='main' style={{ width: 'calc(100vw - 260px)', height: height, overflowY: 'auto' }} ref={scrollableDiv}>
                 <div id='center' style={{ width: '100%' }}>
                     <Stack direction='column-reverse' sx={{ width: '100%', height: '100%' }}>
-                        {messages.map((message, index) => (
-                            <div key={index} style={{ backgroundColor: message.author === 'user' ? '#343541' : '#444654', width: '100%', display: 'flex', justifyContent: 'center' }}>
-                                <Icon role={message.author} />
-                                <div style={{ width: '45%' }}>
-                                    <Typography
-                                        variant='body1'
-                                        sx={{
-                                            color: message.author === 'user' ? 'white' : '#C8CCD3',
-                                            fontFamily: 'Noto Sans',
-                                            fontSize: '0.95rem',
-                                            p: '1rem',
-                                            lineHeight: '2',
-                                            mt: '10px',
-                                            mb: '10px'
-                                        }}>
-                                        {message.content}
-                                    </Typography>
-                                </div>
-                            </div>
-                        ))}
+                        {messages.map((message, index) => {
+                            if (message.author === 'assistant' && message.content.includes('\n' || '```' || '`')) {
+                                const content: string[] = message.content.split('\n' || '```');
+                                let code: boolean = false;
+                                return (
+                                    <div key={index} style={{ backgroundColor: '#444654', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                                        <Icon role={message.author} />
+                                        <div style={{ width: '45%', marginBottom: '15px', marginTop: '15px' }}>
+                                            {content.map((line, index) => {
+                                                if (line.includes('```')) {
+                                                    code = !code;
+                                                    return (
+                                                        <Typography
+                                                            key={index}
+                                                            variant='body1'
+                                                            sx={{
+                                                                color: '#C8CCD3',
+                                                                fontFamily: 'Noto Sans',
+                                                                fontSize: '0.95rem',
+                                                                lineHeight: '2',
+                                                                mt: '30px',
+                                                                mb: '30px',
+                                                                paddingLeft: '1rem',
+                                                                paddingRight: '1rem'
+                                                            }}
+                                                        />
+                                                    );
+                                                } else {
+                                                    if (code) {
+                                                        return (
+                                                            <Typography
+                                                                key={index}
+                                                                variant='body1'
+                                                                component={'pre'}
+                                                                sx={{
+                                                                    color: '#C8CCD3',
+                                                                    fontFamily: 'FireCode',
+                                                                    fontSize: '0.9rem',
+                                                                    lineHeight: '1.4',
+                                                                    paddingLeft: '2.5rem',
+                                                                    paddingRight: '1rem'
+                                                                }}>
+                                                                {line}
+                                                            </Typography>
+                                                        );
+                                                    } else {
+                                                        return (
+                                                            <Typography
+                                                                key={index}
+                                                                variant='body1'
+                                                                sx={{
+                                                                    color: '#C8CCD3',
+                                                                    fontFamily: 'Noto Sans',
+                                                                    fontSize: '0.95rem',
+                                                                    lineHeight: '1.8',
+                                                                    paddingLeft: '1rem',
+                                                                    paddingRight: '1rem'
+                                                                }}>
+                                                                {line}
+                                                            </Typography>
+                                                        );
+                                                    }
+                                                }
+                                            })}
+                                        </div>
+                                        <IconButton sx={{ color: '#7F7F90', mt: '26px', width: '25px', height: '25px', borderRadius: '7px', '&:hover': { color: '#D9D9E3' } }}>
+                                            <PasteIcon sx={{ fontSize: '15px' }} />
+                                        </IconButton>
+                                    </div>
+                                );
+                            } else {
+                                return (
+                                    <div
+                                        key={index}
+                                        style={{ backgroundColor: message.author === 'user' ? '#343541' : '#444654', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                                        <Icon role={message.author} />
+                                        <div style={{ width: '45%' }}>
+                                            <Typography
+                                                variant='body1'
+                                                sx={{
+                                                    color: message.author === 'user' ? 'white' : '#C8CCD3',
+                                                    fontFamily: 'Noto Sans',
+                                                    fontSize: '0.95rem',
+                                                    p: '1rem',
+                                                    lineHeight: '2',
+                                                    mt: '10px',
+                                                    mb: '10px'
+                                                }}>
+                                                {message.content}
+                                            </Typography>
+                                        </div>
+                                        <IconButton sx={{ color: '#7F7F90', mt: '26px', width: '25px', height: '25px', borderRadius: '7px', '&:hover': { color: '#D9D9E3' } }}>
+                                            <PasteIcon sx={{ fontSize: '15px' }} />
+                                        </IconButton>
+                                    </div>
+                                );
+                            }
+                        })}
                     </Stack>
                 </div>
                 <Footer setHeight={handleHeightChange} newInput='' />

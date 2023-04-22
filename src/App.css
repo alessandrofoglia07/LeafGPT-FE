@@ -1,5 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap');
 /* font-family: 'Noto Sans', sans-serif; */
+/* font-family: 'IBM Plex Mono', monospace; */
+
+@font-face {
+    font-family: FireCode;
+    src: url(./fonts/FiraCode-Regular.ttf) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+code {
+    font-weight: 800;
+}
 
 .centered {
     position: absolute;

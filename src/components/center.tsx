@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Stack, Typography } from '@mui/material';
 import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
 import ElectricBoltOutlinedIcon from '@mui/icons-material/ElectricBoltOutlined';
@@ -20,7 +19,7 @@ const Center = (props: { footerHeight: number; setInput: (input: string) => void
 
     return (
         <div id='Center' style={{ width: '100%', height: height, display: 'flex', justifyContent: 'center' }}>
-            <Stack direction='column' display='flex' alignItems='center' spacing={-1} sx={{ maxWidth: '768px' }}>
+            <Stack id='non-active' direction='column' display='flex' alignItems='center' spacing={-1} sx={{ maxWidth: '768px' }}>
                 <Typography variant='h4' sx={{ textAlign: 'center', color: 'White', fontFamily: 'Noto Sans', fontWeight: '800', fontSize: '2.25rem', mt: '20vh', mb: '4rem' }}>
                     LeafGPT
                 </Typography>
