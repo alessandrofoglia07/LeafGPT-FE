@@ -1,62 +1,94 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, useEffect } from 'react';
-import { Typography, IconButton, Avatar } from '@mui/material';
+import React, { useState, useEffect, useRef } from 'react';
+import { Typography, IconButton, Stack } from '@mui/material';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import Footer from '../components/footer';
 import SideBar from '../components/sideBar';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { useAuthHeader } from 'react-auth-kit';
+import io from 'socket.io-client';
+import Icon from '../components/icon';
 
-const placeholderMessages = [
-    { role: 'user', content: 'What is the meaning of life?' },
-    {
-        role: 'assistant',
-        content:
-            'The meaning of life is a philosophical and existential question that has puzzled humans for centuries. The answer to this question is subjective and varies depending on individual beliefs and perspectives.Some people believe that the meaning of life is to achieve happiness and fulfill their desires, while others believe that it is to serve a higher purpose or spiritual calling. Some philosophers argue that the meaning of life is to seek knowledge and understanding of the world, while others believe that it is to make a positive impact on society and leave a legacy.Ultimately, the meaning of life is a deeply personal and subjective matter that each individual must discover for themselves. It may be helpful to reflect on your values, passions, and goals, and consider how they align with your sense of purpose and fulfillment.'
-    },
-    { role: 'user', content: 'Does my wife love me?' },
-    {
-        role: 'assistant',
-        content:
-            "As an AI language model, I do not have access to personal or private information about individuals, including your relationship with your wife. It's important to communicate openly and honestly with your wife about your feelings and concerns, and to create a safe and supportive space where you can discuss any issues that may arise in your relationship. Expressing love and affection, demonstrating care and respect, and actively working to build trust and intimacy can help strengthen your relationship and deepen your connection with your partner."
-    }
-];
+const socket = io('http://localhost:5000');
 
 const PasteIcon = ContentPasteIcon;
 
 const ChatPage = () => {
-    const [messages, setMessages] = useState<{ role: string; content: string }[]>(placeholderMessages);
-    const [height, setHeight] = useState<number>(0);
-    const [footerHeight, setFooterHeight] = useState<number>(0);
+    const { id } = useParams<{ id: string }>();
+    const authHeader = useAuthHeader();
 
-    const handleHeightChange = (height: number) => {
-        setFooterHeight(height);
+    const scrollableDiv = useRef<HTMLDivElement>(null);
+
+    const [messages, setMessages] = useState<{ author: 'user' | 'assistant'; content: string }[]>([]);
+    const [footerHeight, setFooterHeight] = useState<number>(0);
+    const [height, setHeight] = useState<string>('calc(100vh - 64px)');
+
+    const handleHeightChange = (footeHeight: number) => {
+        setFooterHeight(footeHeight);
     };
 
+    useEffect(() => {
+        setHeight(`calc(100vh - ${footerHeight + 64}px)`);
+    }, [footerHeight]);
+
+    const getMessages = async () => {
+        const res = await axios.get(`http://localhost:5000/api/chat/getMessagesByChatID/${id}`, { headers: { Authorization: authHeader() } });
+        const data = res.data;
+        setMessages(data);
+    };
+
+    // at the beginning, get all messages
+    useEffect(() => {
+        getMessages();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // when page is loaded, scroll to the bottom of the page
+    useEffect(() => {
+        if (scrollableDiv.current) {
+            scrollableDiv.current.scrollTo(0, scrollableDiv.current.scrollHeight);
+        }
+    }, [messages]);
+
+    useEffect(() => {
+        socket.on('newMessage', (data: { chatID: string }) => {
+            if (data.chatID === id) {
+                getMessages();
+            }
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [socket]);
+
     return (
-        <div id='ChatPage' style={{ width: '100%', height: height, display: 'flex', justifyContent: 'center' }}>
+        <div id='ChatPage' style={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center' }}>
             <div id='side' style={{ width: '260px', height: '100%' }}>
                 <SideBar />
             </div>
-            <div id='main' style={{ width: 'calc(100vw - 260px)', height: '100vh' }}>
+            <div id='main' style={{ width: 'calc(100vw - 260px)', height: height, overflowY: 'auto' }} ref={scrollableDiv}>
                 <div id='center' style={{ width: '100%' }}>
-                    {messages.map((message, index) => (
-                        <div key={index} style={{ backgroundColor: message.role === 'user' ? '#343541' : '#444654', width: '100%', display: 'flex', justifyContent: 'center' }}>
-                            <div style={{ width: '45%' }}>
-                                <Typography
-                                    variant='body1'
-                                    sx={{
-                                        color: message.role === 'user' ? 'white' : '#C8CCD3',
-                                        fontFamily: 'Noto Sans',
-                                        fontSize: '0.95rem',
-                                        p: '1rem',
-                                        lineHeight: '2',
-                                        mt: '10px',
-                                        mb: '10px'
-                                    }}>
-                                    {message.content}
-                                </Typography>
+                    <Stack direction='column-reverse' sx={{ width: '100%', height: '100%' }}>
+                        {messages.map((message, index) => (
+                            <div key={index} style={{ backgroundColor: message.author === 'user' ? '#343541' : '#444654', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                                <Icon role={message.author} />
+                                <div style={{ width: '45%' }}>
+                                    <Typography
+                                        variant='body1'
+                                        sx={{
+                                            color: message.author === 'user' ? 'white' : '#C8CCD3',
+                                            fontFamily: 'Noto Sans',
+                                            fontSize: '0.95rem',
+                                            p: '1rem',
+                                            lineHeight: '2',
+                                            mt: '10px',
+                                            mb: '10px'
+                                        }}>
+                                        {message.content}
+                                    </Typography>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </Stack>
                 </div>
                 <Footer setHeight={handleHeightChange} newInput='' />
             </div>

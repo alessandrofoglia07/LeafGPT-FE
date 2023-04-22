@@ -57,13 +57,13 @@ const SideBar = () => {
                             <div style={{ marginTop: '10px', overflowY: 'auto', height: 'calc(100% - 179px)' }}>
                                 {chats.map((chat) => (
                                     <Button
-                                        key={chat.id}
+                                        key={chat._id}
                                         variant='text'
                                         color='info'
                                         sx={{ textTransform: 'none', height: '46px', width: '244px', mb: '5px', borderRadius: '5px', justifyContent: 'left', ml: '7px' }}
                                         startIcon={<ChatBubbleOutlineRoundedIcon fontSize='small' sx={{ ml: '7px' }} />}
-                                        href={`/c/${chat.id}`}>
-                                        <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>{chat.name}</Typography>
+                                        href={`/c/${chat._id}`}>
+                                        <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>{chat.title}</Typography>
                                     </Button>
                                 ))}
                             </div>

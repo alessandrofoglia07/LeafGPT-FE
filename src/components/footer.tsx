@@ -3,9 +3,11 @@ import { Typography, TextField, IconButton, Stack } from '@mui/material';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import axios from 'axios';
 import { useAuthHeader } from 'react-auth-kit';
+import { useNavigate } from 'react-router-dom';
 
 const Footer = (props: { setHeight: (height: number) => void; newInput: string }) => {
     const authHeader = useAuthHeader();
+    const navigate = useNavigate();
 
     const [input, setInput] = useState<string>('');
     const [height, setHeight] = useState<number>(0);
@@ -58,13 +60,30 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
     const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
         e?.preventDefault();
         setTimeout(() => setInput(''), 1);
+
         const message = input.trim();
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const chatGPTResponse = await axios.post(
-            'http://localhost:5000/api/chat/createMessage',
-            { message: { author: 'user', content: message }, chatID: undefined },
-            { headers: { Authorization: authHeader() } }
-        );
+        if (message === '') return;
+
+        if (window.location.pathname === '/') {
+            console.log(3);
+            const res = await axios.post(
+                'http://localhost:5000/api/chat/createMessage',
+                { message: { author: 'user', content: message }, chatID: undefined },
+                { headers: { Authorization: authHeader() } }
+            );
+
+            const { chatID } = res.data;
+
+            navigate(`/c/${chatID}`);
+        }
+
+        const chatPathRegex = /^\/c\/(.*)$/;
+
+        if (window.location.pathname.match(chatPathRegex)) {
+            const chatID = window.location.pathname.split('/')[2];
+            await axios.post('http://localhost:5000/api/chat/createMessage', { message: { author: 'user', content: message }, chatID }, { headers: { Authorization: authHeader() } });
+        }
+        return;
     };
 
     const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
