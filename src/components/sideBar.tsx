@@ -4,17 +4,20 @@ import AddIcon from '@mui/icons-material/Add';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import { ThemeProvider } from '@mui/material/styles';
 import forestTheme from '../forestTheme';
 import axios from 'axios';
-import { useAuthHeader } from 'react-auth-kit';
+import { useAuthHeader, useSignOut } from 'react-auth-kit';
 import { useNavigate } from 'react-router-dom';
 
 const SideBar = () => {
     const authHeader = useAuthHeader();
     const navigate = useNavigate();
+    const signOut = useSignOut();
 
     const [chats, setChats] = useState<any[]>([]);
+    const [deleteConfirmation, setDeleteConfirmation] = useState<boolean>(false);
 
     const getChats = async () => {
         try {
@@ -31,6 +34,21 @@ const SideBar = () => {
 
     const handleNewChat = () => {
         navigate('/');
+    };
+
+    const handleLogOut = () => {
+        signOut();
+    };
+
+    const handleClearConversations = async () => {
+        if (!deleteConfirmation) {
+            setDeleteConfirmation(true);
+            return;
+        } else {
+            setDeleteConfirmation(false);
+            await axios.delete('http://localhost:5000/api/chat/deleteAllChatsByUserID', { headers: { Authorization: authHeader() } });
+            navigate('/');
+        }
     };
 
     return (
@@ -68,18 +86,32 @@ const SideBar = () => {
                                 ))}
                             </div>
                             <div style={{ position: 'absolute', bottom: '0px', borderTop: '1px solid #4D4D4F', right: '23px' }}>
-                                <Button
-                                    variant='text'
-                                    color='info'
-                                    sx={{ textTransform: 'none', height: '46px', width: '244px', mb: '5px', borderRadius: '5px', justifyContent: 'left', ml: '25px', mt: '5px' }}
-                                    startIcon={<DeleteOutlinedIcon fontSize='small' sx={{ ml: '7px' }} />}>
-                                    <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>Clear conversations</Typography>
-                                </Button>
+                                {!deleteConfirmation ? (
+                                    <Button
+                                        variant='text'
+                                        color='info'
+                                        sx={{ textTransform: 'none', height: '46px', width: '244px', mb: '5px', borderRadius: '5px', justifyContent: 'left', ml: '25px', mt: '5px' }}
+                                        startIcon={<DeleteOutlinedIcon fontSize='small' sx={{ ml: '7px' }} />}
+                                        onClick={handleClearConversations}>
+                                        <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>Clear conversations</Typography>
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        variant='text'
+                                        color='info'
+                                        sx={{ textTransform: 'none', height: '46px', width: '244px', mb: '5px', borderRadius: '5px', justifyContent: 'left', ml: '25px', mt: '5px' }}
+                                        startIcon={<CheckRoundedIcon fontSize='small' sx={{ ml: '7px' }} />}
+                                        onClick={handleClearConversations}>
+                                        <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>Confirm clear conversations</Typography>
+                                    </Button>
+                                )}
+
                                 <Button
                                     variant='text'
                                     color='info'
                                     sx={{ textTransform: 'none', height: '46px', width: '244px', mb: '10px', borderRadius: '5px', justifyContent: 'left', ml: '25px' }}
-                                    startIcon={<LogoutRoundedIcon fontSize='small' sx={{ ml: '11px' }} />}>
+                                    startIcon={<LogoutRoundedIcon fontSize='small' sx={{ ml: '11px' }} />}
+                                    onClick={handleLogOut}>
                                     <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>Log out</Typography>
                                 </Button>
                             </div>

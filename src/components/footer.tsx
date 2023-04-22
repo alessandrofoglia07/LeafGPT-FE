@@ -4,6 +4,9 @@ import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import axios from 'axios';
 import { useAuthHeader } from 'react-auth-kit';
 import { useNavigate } from 'react-router-dom';
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:5000');
 
 const Footer = (props: { setHeight: (height: number) => void; newInput: string }) => {
     const authHeader = useAuthHeader();
@@ -12,6 +15,7 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
     const [input, setInput] = useState<string>('');
     const [height, setHeight] = useState<number>(0);
     const [pasteHandler, setPasteHandler] = useState<boolean>(false);
+    const [canSubmit, setCanSubmit] = useState<boolean>(true);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
@@ -59,31 +63,47 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
 
     const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
         e?.preventDefault();
+        if (canSubmit === false) return;
         setTimeout(() => setInput(''), 1);
+
+        const chatPathRegex = /^\/c\/(.*)$/;
 
         const message = input.trim();
         if (message === '') return;
 
-        if (window.location.pathname === '/') {
-            console.log(3);
-            const res = await axios.post(
-                'http://localhost:5000/api/chat/createMessage',
-                { message: { author: 'user', content: message }, chatID: undefined },
-                { headers: { Authorization: authHeader() } }
-            );
+        try {
+            setCanSubmit(false);
+            if (window.location.pathname === '/') {
+                socket.on('newChat', (data: { chatID: string }) => {
+                    navigate(`/c/${data.chatID}`);
+                });
 
-            const { chatID } = res.data;
+                const res = await axios.post(
+                    'http://localhost:5000/api/chat/createMessage',
+                    { message: { author: 'user', content: message }, chatID: undefined },
+                    { headers: { Authorization: authHeader() } }
+                );
 
-            navigate(`/c/${chatID}`);
+                if (window.location.pathname.match(chatPathRegex)) return;
+
+                const { chatID } = res.data;
+                navigate(`/c/${chatID}`);
+            }
+
+            if (window.location.pathname.match(chatPathRegex)) {
+                const chatID = window.location.pathname.split('/')[2];
+                await axios.post(
+                    'http://localhost:5000/api/chat/createMessage',
+                    { message: { author: 'user', content: message }, chatID },
+                    { headers: { Authorization: authHeader() } }
+                );
+            }
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setCanSubmit(true);
+            return;
         }
-
-        const chatPathRegex = /^\/c\/(.*)$/;
-
-        if (window.location.pathname.match(chatPathRegex)) {
-            const chatID = window.location.pathname.split('/')[2];
-            await axios.post('http://localhost:5000/api/chat/createMessage', { message: { author: 'user', content: message }, chatID }, { headers: { Authorization: authHeader() } });
-        }
-        return;
     };
 
     const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
@@ -97,9 +117,15 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
     };
 
     return (
-        <div id='Footer' style={{ position: 'absolute', bottom: '0px', width: 'calc(100vw - 260px)' }}>
+        <div
+            id='Footer'
+            style={{
+                position: 'absolute',
+                bottom: '0px',
+                width: 'calc(100vw - 260px)'
+            }}>
             <form autoComplete='off' style={{ width: '100%', height: '100%', display: 'flex' }} onSubmit={handleSubmit}>
-                <Stack direction='column' display='flex' alignItems='center' sx={{ width: '100%', height: '100%' }}>
+                <Stack direction='column' display='flex' alignItems='center' sx={{ width: '100%', height: '100%', mt: '32px' }}>
                     <TextField
                         id='input'
                         autoFocus
