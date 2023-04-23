@@ -88,9 +88,7 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
 
                 const { chatID } = res.data;
                 navigate(`/c/${chatID}`);
-            }
-
-            if (window.location.pathname.match(chatPathRegex)) {
+            } else if (window.location.pathname.match(chatPathRegex)) {
                 const chatID = window.location.pathname.split('/')[2];
                 await axios.post(
                     'http://localhost:5000/api/chat/createMessage',

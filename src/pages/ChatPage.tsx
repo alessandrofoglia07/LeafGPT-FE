@@ -79,22 +79,57 @@ const ChatPage = () => {
                                             {content.map((line, index) => {
                                                 if (line.includes('```')) {
                                                     code = !code;
-                                                    return (
-                                                        <Typography
-                                                            key={index}
-                                                            variant='body1'
-                                                            sx={{
-                                                                color: '#C8CCD3',
-                                                                fontFamily: 'Noto Sans',
-                                                                fontSize: '0.95rem',
-                                                                lineHeight: '2',
-                                                                mt: '30px',
-                                                                mb: '30px',
-                                                                paddingLeft: '1rem',
-                                                                paddingRight: '1rem'
-                                                            }}
-                                                        />
-                                                    );
+                                                    if (code) {
+                                                        return (
+                                                            <Typography
+                                                                key={index}
+                                                                variant='body1'
+                                                                sx={{
+                                                                    color: '#343541',
+                                                                    fontFamily: 'Noto Sans',
+                                                                    fontSize: '0.95rem',
+                                                                    lineHeight: '2',
+                                                                    paddingLeft: '1rem',
+                                                                    paddingRight: '1rem',
+                                                                    mt: '20px',
+                                                                    backgroundColor: '#343541',
+                                                                    borderTopLeftRadius: '7px',
+                                                                    borderTopRightRadius: '7px',
+                                                                    pointerEvents: 'none',
+                                                                    userSelect: 'none',
+                                                                    WebkitUserSelect: 'none',
+                                                                    MozUserSelect: 'none',
+                                                                    msUserSelect: 'none'
+                                                                }}>
+                                                                .
+                                                            </Typography>
+                                                        );
+                                                    } else {
+                                                        return (
+                                                            <Typography
+                                                                key={index}
+                                                                variant='body1'
+                                                                sx={{
+                                                                    color: 'black',
+                                                                    fontFamily: 'Noto Sans',
+                                                                    fontSize: '0.95rem',
+                                                                    lineHeight: '1',
+                                                                    paddingLeft: '1rem',
+                                                                    paddingRight: '1rem',
+                                                                    mb: '20px',
+                                                                    backgroundColor: 'black',
+                                                                    borderBottomLeftRadius: '7px',
+                                                                    borderBottomRightRadius: '7px',
+                                                                    pointerEvents: 'none',
+                                                                    userSelect: 'none',
+                                                                    WebkitUserSelect: 'none',
+                                                                    MozUserSelect: 'none',
+                                                                    msUserSelect: 'none'
+                                                                }}>
+                                                                .
+                                                            </Typography>
+                                                        );
+                                                    }
                                                 } else {
                                                     if (code) {
                                                         return (
@@ -107,8 +142,10 @@ const ChatPage = () => {
                                                                     fontFamily: 'FireCode',
                                                                     fontSize: '0.9rem',
                                                                     lineHeight: '1.4',
-                                                                    paddingLeft: '2.5rem',
-                                                                    paddingRight: '1rem'
+                                                                    paddingLeft: '2rem',
+                                                                    paddingRight: '1rem',
+                                                                    bgcolor: 'black',
+                                                                    paddingTop: '0.25rem'
                                                                 }}>
                                                                 {line}
                                                             </Typography>
