@@ -16,6 +16,7 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
     const [height, setHeight] = useState<number>(0);
     const [pasteHandler, setPasteHandler] = useState<boolean>(false);
     const [canSubmit, setCanSubmit] = useState<boolean>(true);
+    const [width, setWidth] = useState<number>(window.innerWidth);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
@@ -32,6 +33,16 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
             setInput(value);
         }
     }, [props]);
+
+    useEffect(() => {
+        const updateWidth = () => {
+            setWidth(window.innerWidth);
+        };
+
+        window.addEventListener('resize', updateWidth);
+
+        return () => window.removeEventListener('resize', updateWidth);
+    }, [width]);
 
     const handleEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key === 'Enter' && e.shiftKey === false) {
@@ -114,16 +125,24 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
         }
     };
 
+    const handleChangeWidth = () => {
+        if (width < 1000) {
+            return 'calc(100vw - 60px)';
+        } else {
+            return 'calc(100vw - 260px)';
+        }
+    };
+
     return (
         <div
             id='Footer'
             style={{
                 position: 'absolute',
                 bottom: '0px',
-                width: 'calc(100vw - 260px)'
+                width: handleChangeWidth()
             }}>
             <form autoComplete='off' style={{ width: '100%', height: '100%', display: 'flex' }} onSubmit={handleSubmit}>
-                <Stack direction='column' display='flex' alignItems='center' sx={{ width: '100%', height: '100%', mt: '32px' }}>
+                <Stack direction='column' display='flex' alignItems='center' justifyContent='center' sx={{ width: '100%', height: '100%', mt: '32px' }}>
                     <TextField
                         id='input'
                         autoFocus

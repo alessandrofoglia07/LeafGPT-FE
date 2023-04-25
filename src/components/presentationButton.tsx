@@ -1,27 +1,62 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Typography } from '@mui/material';
 
 const PresentationButton = (props: { content: string; clickable?: boolean; handleClick?: (content: string) => void }) => {
+    const [width, setWidth] = useState<number>(window.innerWidth);
+
+    useEffect(() => {
+        const updateWidth = () => {
+            setWidth(window.innerWidth);
+        };
+
+        window.addEventListener('resize', updateWidth);
+
+        return () => window.removeEventListener('resize', updateWidth);
+    }, [width]);
+
     const sx = () => {
-        if (props.clickable) {
-            return {
-                bgcolor: '#3E3F4B',
-                '&:hover': { bgcolor: '#202123' },
-                boxShadow: '0px 0px 1px 1px #343541',
-                maxWidth: '28rem',
-                width: '100%',
-                mt: '15px'
-            };
+        if (width > 1000) {
+            if (props.clickable) {
+                return {
+                    bgcolor: '#3E3F4B',
+                    '&:hover': { bgcolor: '#202123' },
+                    boxShadow: '0px 0px 1px 1px #343541',
+                    maxWidth: '28rem',
+                    width: '100%',
+                    mt: '15px'
+                };
+            } else {
+                return {
+                    bgcolor: '#3E3F4B',
+                    '&:hover': { bgcolor: '#3E3F4B' },
+                    pointerEvents: 'none',
+                    boxShadow: '0px 0px 1px 1px #343541',
+                    maxWidth: '28rem',
+                    width: '100%',
+                    mt: '15px'
+                };
+            }
         } else {
-            return {
-                bgcolor: '#3E3F4B',
-                '&:hover': { bgcolor: '#3E3F4B' },
-                pointerEvents: 'none',
-                boxShadow: '0px 0px 1px 1px #343541',
-                maxWidth: '28rem',
-                width: '100%',
-                mt: '15px'
-            };
+            if (props.clickable) {
+                return {
+                    bgcolor: '#3E3F4B',
+                    '&:hover': { bgcolor: '#202123' },
+                    boxShadow: '0px 0px 1px 1px #343541',
+                    maxWidth: '28rem',
+                    width: '90%',
+                    mt: '15px'
+                };
+            } else {
+                return {
+                    bgcolor: '#3E3F4B',
+                    '&:hover': { bgcolor: '#3E3F4B' },
+                    pointerEvents: 'none',
+                    boxShadow: '0px 0px 1px 1px #343541',
+                    maxWidth: '28rem',
+                    width: '90%',
+                    mt: '15px'
+                };
+            }
         }
     };
 

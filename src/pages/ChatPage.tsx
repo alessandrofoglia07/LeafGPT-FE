@@ -22,6 +22,17 @@ const ChatPage = () => {
     const [messages, setMessages] = useState<{ author: 'user' | 'assistant'; content: string }[]>([]);
     const [footerHeight, setFooterHeight] = useState<number>(0);
     const [height, setHeight] = useState<string>('calc(100vh - 64px)');
+    const [width, setWidth] = useState<number>(window.innerWidth);
+
+    useEffect(() => {
+        const updateWidth = () => {
+            setWidth(window.innerWidth);
+        };
+
+        window.addEventListener('resize', updateWidth);
+
+        return () => window.removeEventListener('resize', updateWidth);
+    }, [width]);
 
     const handleHeightChange = (footeHeight: number) => {
         setFooterHeight(footeHeight);
@@ -48,24 +59,47 @@ const ChatPage = () => {
         if (scrollableDiv.current) {
             scrollableDiv.current.scrollTo(0, scrollableDiv.current.scrollHeight);
         }
-    }, [messages]);
+    }, [messages, width]);
 
     useEffect(() => {
         socket.on('newMessage', (data: { chatID: string }) => {
             if (data.chatID === id) {
                 getMessages();
-                console.log(messages);
             }
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket]);
 
+    const handleWidthSide = () => {
+        if (width < 1000) {
+            return '0px';
+        } else {
+            return '260px';
+        }
+    };
+
+    const handleWidthMain = () => {
+        if (width < 1000) {
+            return '100vw';
+        } else {
+            return 'calc(100vw - 260px)';
+        }
+    };
+
+    const handleMessageWidth = () => {
+        if (width < 1000) {
+            return '100%';
+        } else {
+            return '45%';
+        }
+    };
+
     return (
         <div id='ChatPage' style={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center' }}>
-            <div id='side' style={{ width: '260px', height: '100%' }}>
-                <SideBar />
+            <div id='side' style={{ width: handleWidthSide(), height: '100%' }}>
+                {width > 1000 && <SideBar />}
             </div>
-            <div id='main' style={{ width: 'calc(100vw - 260px)', height: height, overflowY: 'auto' }} ref={scrollableDiv}>
+            <div id='main' style={{ width: handleWidthMain(), height: height, overflowY: 'auto' }} ref={scrollableDiv}>
                 <div id='center' style={{ width: '100%' }}>
                     <Stack direction='column-reverse' sx={{ width: '100%', height: '100%' }}>
                         {messages.map((message, index) => {
@@ -75,7 +109,7 @@ const ChatPage = () => {
                                 return (
                                     <div key={index} style={{ backgroundColor: '#444654', width: '100%', display: 'flex', justifyContent: 'center' }}>
                                         <Icon role={message.author} />
-                                        <div style={{ width: '45%', marginBottom: '15px', marginTop: '15px' }}>
+                                        <div style={{ width: handleMessageWidth(), marginBottom: '15px', marginTop: '15px' }}>
                                             {content.map((line, index) => {
                                                 if (line.includes('```')) {
                                                     code = !code;
@@ -138,7 +172,7 @@ const ChatPage = () => {
                                                                 variant='body1'
                                                                 component={'pre'}
                                                                 sx={{
-                                                                    color: '#C8CCD3',
+                                                                    color: '#D1D5D2',
                                                                     fontFamily: 'FireCode',
                                                                     fontSize: '0.9rem',
                                                                     lineHeight: '1.4',
@@ -156,7 +190,7 @@ const ChatPage = () => {
                                                                 key={index}
                                                                 variant='body1'
                                                                 sx={{
-                                                                    color: '#C8CCD3',
+                                                                    color: '#D1D5D2',
                                                                     fontFamily: 'Noto Sans',
                                                                     fontSize: '0.95rem',
                                                                     lineHeight: '1.8',
@@ -181,11 +215,11 @@ const ChatPage = () => {
                                         key={index}
                                         style={{ backgroundColor: message.author === 'user' ? '#343541' : '#444654', width: '100%', display: 'flex', justifyContent: 'center' }}>
                                         <Icon role={message.author} />
-                                        <div style={{ width: '45%' }}>
+                                        <div style={{ width: handleMessageWidth() }}>
                                             <Typography
                                                 variant='body1'
                                                 sx={{
-                                                    color: message.author === 'user' ? 'white' : '#C8CCD3',
+                                                    color: message.author === 'user' ? 'white' : '#D1D5D2',
                                                     fontFamily: 'Noto Sans',
                                                     fontSize: '0.95rem',
                                                     p: '1rem',
@@ -205,7 +239,9 @@ const ChatPage = () => {
                         })}
                     </Stack>
                 </div>
-                <Footer setHeight={handleHeightChange} newInput='' />
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Footer setHeight={handleHeightChange} newInput='' />
+                </div>
             </div>
         </div>
     );
