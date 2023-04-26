@@ -46,7 +46,7 @@ const Icon = (props: { role: 'user' | 'assistant' }) => {
         <div id='Icon'>
             <Avatar
                 sx={{
-                    background: props.role === 'user' ? '#3f51b5' : '#f50057',
+                    background: props.role === 'user' ? '#3f51b5' : 'null',
                     mt: '25px',
                     borderRadius: '5px',
                     width: '30px',

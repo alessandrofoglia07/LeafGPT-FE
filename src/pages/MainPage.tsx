@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import SideBar from '../components/sideBar';
 import Footer from '../components/footer';
 import Center from '../components/center';
+import Topper from '../components/topper';
 
 const MainPage = () => {
-    const [footerHeight, setFooterHeight] = React.useState<number>(0);
-    const [newInput, setNewInput] = React.useState<string>('');
-    const [width, setWidth] = React.useState<number>(window.innerWidth);
+    const [footerHeight, setFooterHeight] = useState<number>(0);
+    const [newInput, setNewInput] = useState<string>('');
+    const [width, setWidth] = useState<number>(window.innerWidth);
 
     const handleHeightChange = (height: number) => {
         setFooterHeight(height);
@@ -49,6 +50,7 @@ const MainPage = () => {
                 {width > 1000 && <SideBar />}
             </div>
             <div id='main' style={{ width: handleMainWidth(), height: '100vh', display: 'flex', justifyContent: 'center' }}>
+                {width < 1000 && <Topper />}
                 <Center setInput={setInput} footerHeight={footerHeight} />
                 <Footer setHeight={handleHeightChange} newInput={newInput} />
             </div>

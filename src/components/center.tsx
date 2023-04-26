@@ -11,8 +11,15 @@ const WarningIcon = WarningAmberRoundedIcon;
 const Button = PresentationButton;
 
 const Center = (props: { footerHeight: number; setInput: (input: string) => void }) => {
-    const height = 'calc(100% - ' + props.footerHeight + 'px)';
     const [width, setWidth] = useState<number>(window.innerWidth);
+
+    const height = () => {
+        if (width > 1000) {
+            return 'calc(100% - ' + props.footerHeight + 'px)';
+        } else {
+            return 'calc(100% - ' + props.footerHeight + 'px - 40px)';
+        }
+    };
 
     useEffect(() => {
         const updateWidth = () => {
@@ -60,8 +67,16 @@ const Center = (props: { footerHeight: number; setInput: (input: string) => void
         }
     };
 
+    const handleTop = () => {
+        if (width > 1000) {
+            return '0px';
+        } else {
+            return '40px';
+        }
+    };
+
     return (
-        <div id='Center' style={{ width: '100%', height: height, display: 'flex', justifyContent: 'center', overflowY: 'auto' }}>
+        <div id='Center' style={{ width: '100%', height: height(), display: 'flex', justifyContent: 'center', overflowY: 'auto', position: 'relative', top: handleTop() }}>
             <Stack id='non-active' direction='column' display='flex' alignItems='center' spacing={-1} sx={{ maxWidth: '768px' }}>
                 <Typography variant='h4' sx={{ textAlign: 'center', color: 'White', fontFamily: 'Noto Sans', fontWeight: '800', fontSize: '2.25rem', mt: handleMT(), mb: handleMB() }}>
                     LeafGPT

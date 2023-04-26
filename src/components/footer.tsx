@@ -56,10 +56,18 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
 
     const getFooterHeight = () => {
         const footer = document.getElementById('Footer');
-        if (footer) {
-            return footer.clientHeight;
+        if (width < 1000) {
+            if (footer) {
+                return footer.clientHeight;
+            } else {
+                return 0;
+            }
         } else {
-            return 0;
+            if (footer) {
+                return footer.clientHeight + 40;
+            } else {
+                return 0;
+            }
         }
     };
 
@@ -75,11 +83,11 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
     const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
         e?.preventDefault();
         if (canSubmit === false) return;
+        const message = input.trim();
         setTimeout(() => setInput(''), 1);
 
         const chatPathRegex = /^\/c\/(.*)$/;
 
-        const message = input.trim();
         if (message === '') return;
 
         try {
@@ -127,9 +135,25 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
 
     const handleChangeWidth = () => {
         if (width < 1000) {
-            return 'calc(100vw - 60px)';
+            return '100vw';
         } else {
             return 'calc(100vw - 260px)';
+        }
+    };
+
+    const handleMT = () => {
+        if (width < 1000) {
+            return '5px';
+        } else {
+            return '32px';
+        }
+    };
+
+    const handleBorderTop = () => {
+        if (width < 1000) {
+            return '2px solid hsla(0,0%,100%,.2)';
+        } else {
+            return '';
         }
     };
 
@@ -139,10 +163,11 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
             style={{
                 position: 'absolute',
                 bottom: '0px',
-                width: handleChangeWidth()
+                width: handleChangeWidth(),
+                borderTop: handleBorderTop()
             }}>
             <form autoComplete='off' style={{ width: '100%', height: '100%', display: 'flex' }} onSubmit={handleSubmit}>
-                <Stack direction='column' display='flex' alignItems='center' justifyContent='center' sx={{ width: '100%', height: '100%', mt: '32px' }}>
+                <Stack direction='column' display='flex' alignItems='center' justifyContent='center' sx={{ width: '100%', height: '100%', mt: handleMT() }}>
                     <TextField
                         id='input'
                         autoFocus
@@ -198,8 +223,9 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
                             )
                         }}
                         multiline
+                        maxRows={8}
                     />
-                    <Typography variant='body2' sx={{ color: '#929398', fontFamily: 'Noto Sans', fontSize: '12px', mb: '15px' }}>
+                    <Typography variant='body2' sx={{ color: '#929398', fontFamily: 'Noto Sans', fontSize: '12px', mb: '15px', textAlign: 'center' }}>
                         Powered by GPT-3.5. LeafGPT may produce inaccurate information about people, places, or facts.
                     </Typography>
                 </Stack>

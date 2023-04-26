@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useAuthHeader } from 'react-auth-kit';
 import io from 'socket.io-client';
 import Icon from '../components/icon';
+import Topper from '../components/topper';
 
 const socket = io('http://localhost:5000');
 
@@ -39,8 +40,12 @@ const ChatPage = () => {
     };
 
     useEffect(() => {
-        setHeight(`calc(100vh - ${footerHeight}px)`);
-    }, [footerHeight]);
+        if (width > 1000) {
+            setHeight('calc(100% - ' + footerHeight + 'px)');
+        } else {
+            setHeight('calc(100% - ' + footerHeight + 'px - 40px)');
+        }
+    }, [footerHeight, width]);
 
     const getMessages = async () => {
         const res = await axios.get(`http://localhost:5000/api/chat/getMessagesByChatID/${id}`, { headers: { Authorization: authHeader() } });
@@ -99,7 +104,8 @@ const ChatPage = () => {
             <div id='side' style={{ width: handleWidthSide(), height: '100%' }}>
                 {width > 1000 && <SideBar />}
             </div>
-            <div id='main' style={{ width: handleWidthMain(), height: height, overflowY: 'auto' }} ref={scrollableDiv}>
+            {width < 1000 && <Topper />}
+            <div id='main' style={{ width: handleWidthMain(), height: height, overflowY: 'auto', marginTop: '40px' }} ref={scrollableDiv}>
                 <div id='center' style={{ width: '100%' }}>
                     <Stack direction='column-reverse' sx={{ width: '100%', height: '100%' }}>
                         {messages.map((message, index) => {
