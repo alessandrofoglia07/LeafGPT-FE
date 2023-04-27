@@ -10,6 +10,9 @@ import forestTheme from '../forestTheme';
 import axios from 'axios';
 import { useAuthHeader, useSignOut } from 'react-auth-kit';
 import { useNavigate } from 'react-router-dom';
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:5000');
 
 const SideBar = () => {
     const authHeader = useAuthHeader();
@@ -19,18 +22,24 @@ const SideBar = () => {
     const [chats, setChats] = useState<any[]>([]);
     const [deleteConfirmation, setDeleteConfirmation] = useState<boolean>(false);
 
-    const getChats = async () => {
-        try {
-            const res = await axios.get('http://localhost:5000/api/chat/getChats', { headers: { Authorization: authHeader() } });
-            setChats(res.data);
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
     useEffect(() => {
+        const getChats = async () => {
+            try {
+                const res = await axios.get('http://localhost:5000/api/chat/getChats', { headers: { Authorization: authHeader() } });
+                setChats(res.data);
+                console.log(1);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        socket.on('updatedChats', () => {
+            getChats();
+        });
         getChats();
-    });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [socket]);
 
     const handleNewChat = () => {
         navigate('/');

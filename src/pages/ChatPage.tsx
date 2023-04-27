@@ -112,6 +112,7 @@ const ChatPage = () => {
                             if (message.author === 'assistant' && message.content.includes('\n' || '```' || '`')) {
                                 const content: string[] = message.content.split('\n' || '```');
                                 let code: boolean = false;
+                                let codeBlock: string[] = [];
                                 return (
                                     <div key={index} style={{ backgroundColor: '#444654', width: '100%', display: 'flex', justifyContent: 'center' }}>
                                         <Icon role={message.author} />
@@ -120,17 +121,18 @@ const ChatPage = () => {
                                                 if (line.includes('```')) {
                                                     code = !code;
                                                     if (code) {
+                                                        codeBlock = [];
                                                         return (
+                                                            // code block start
                                                             <Typography
                                                                 key={index}
                                                                 variant='body1'
                                                                 sx={{
+                                                                    width: '93%',
                                                                     color: '#343541',
                                                                     fontFamily: 'Noto Sans',
                                                                     fontSize: '0.95rem',
                                                                     lineHeight: '2',
-                                                                    paddingLeft: '1rem',
-                                                                    paddingRight: '1rem',
                                                                     mt: '20px',
                                                                     backgroundColor: '#343541',
                                                                     borderTopLeftRadius: '7px',
@@ -145,53 +147,60 @@ const ChatPage = () => {
                                                             </Typography>
                                                         );
                                                     } else {
+                                                        const codeBlockString = codeBlock.join('\n');
                                                         return (
-                                                            <Typography
-                                                                key={index}
-                                                                variant='body1'
-                                                                sx={{
-                                                                    color: 'black',
-                                                                    fontFamily: 'Noto Sans',
-                                                                    fontSize: '0.95rem',
-                                                                    lineHeight: '1',
-                                                                    paddingLeft: '1rem',
-                                                                    paddingRight: '1rem',
-                                                                    mb: '20px',
-                                                                    backgroundColor: 'black',
-                                                                    borderBottomLeftRadius: '7px',
-                                                                    borderBottomRightRadius: '7px',
-                                                                    pointerEvents: 'none',
-                                                                    userSelect: 'none',
-                                                                    WebkitUserSelect: 'none',
-                                                                    MozUserSelect: 'none',
-                                                                    msUserSelect: 'none'
-                                                                }}>
-                                                                .
-                                                            </Typography>
+                                                            // code block end
+                                                            // TODO: fix message width overflowing in mobile.
+                                                            <div key={index} style={{ width: '93%' }}>
+                                                                <Typography
+                                                                    variant='body1'
+                                                                    component={'pre'}
+                                                                    sx={{
+                                                                        color: '#D1D5D2',
+                                                                        fontFamily: 'FireCode',
+                                                                        fontSize: '0.9rem',
+                                                                        lineHeight: '1.4',
+                                                                        bgcolor: 'black',
+                                                                        paddingTop: '0.25rem',
+                                                                        pt: '20px',
+                                                                        pb: '10px',
+                                                                        overflowX: 'auto',
+                                                                        pl: '20px',
+                                                                        pr: '10px'
+                                                                    }}>
+                                                                    {codeBlockString}
+                                                                </Typography>
+
+                                                                <Typography
+                                                                    variant='body1'
+                                                                    sx={{
+                                                                        color: 'black',
+                                                                        fontFamily: 'Noto Sans',
+                                                                        fontSize: '0.95rem',
+                                                                        lineHeight: '1',
+                                                                        mb: '20px',
+                                                                        backgroundColor: 'black',
+                                                                        borderBottomLeftRadius: '7px',
+                                                                        borderBottomRightRadius: '7px',
+                                                                        pointerEvents: 'none',
+                                                                        userSelect: 'none',
+                                                                        WebkitUserSelect: 'none',
+                                                                        MozUserSelect: 'none',
+                                                                        msUserSelect: 'none',
+                                                                        pl: '20px',
+                                                                        pr: '10px'
+                                                                    }}>
+                                                                    .
+                                                                </Typography>
+                                                            </div>
                                                         );
                                                     }
                                                 } else {
                                                     if (code) {
-                                                        return (
-                                                            <Typography
-                                                                key={index}
-                                                                variant='body1'
-                                                                component={'pre'}
-                                                                sx={{
-                                                                    color: '#D1D5D2',
-                                                                    fontFamily: 'FireCode',
-                                                                    fontSize: '0.9rem',
-                                                                    lineHeight: '1.4',
-                                                                    paddingLeft: '2rem',
-                                                                    paddingRight: '1rem',
-                                                                    bgcolor: 'black',
-                                                                    paddingTop: '0.25rem'
-                                                                }}>
-                                                                {line}
-                                                            </Typography>
-                                                        );
+                                                        codeBlock.push(line);
                                                     } else {
                                                         return (
+                                                            // normal line
                                                             <Typography
                                                                 key={index}
                                                                 variant='body1'
@@ -200,8 +209,8 @@ const ChatPage = () => {
                                                                     fontFamily: 'Noto Sans',
                                                                     fontSize: '0.95rem',
                                                                     lineHeight: '1.8',
-                                                                    paddingLeft: '1rem',
-                                                                    paddingRight: '1rem'
+                                                                    pl: '1rem',
+                                                                    pr: '1rem'
                                                                 }}>
                                                                 {line}
                                                             </Typography>
@@ -210,9 +219,11 @@ const ChatPage = () => {
                                                 }
                                             })}
                                         </div>
-                                        <IconButton sx={{ color: '#7F7F90', mt: '26px', width: '25px', height: '25px', borderRadius: '7px', '&:hover': { color: '#D9D9E3' } }}>
-                                            <PasteIcon sx={{ fontSize: '15px' }} />
-                                        </IconButton>
+                                        {width > 1000 && (
+                                            <IconButton sx={{ color: '#7F7F90', mt: '26px', width: '25px', height: '25px', borderRadius: '7px', '&:hover': { color: '#D9D9E3' } }}>
+                                                <PasteIcon sx={{ fontSize: '15px' }} />
+                                            </IconButton>
+                                        )}
                                     </div>
                                 );
                             } else {
@@ -236,9 +247,11 @@ const ChatPage = () => {
                                                 {message.content}
                                             </Typography>
                                         </div>
-                                        <IconButton sx={{ color: '#7F7F90', mt: '26px', width: '25px', height: '25px', borderRadius: '7px', '&:hover': { color: '#D9D9E3' } }}>
-                                            <PasteIcon sx={{ fontSize: '15px' }} />
-                                        </IconButton>
+                                        {width > 1000 && (
+                                            <IconButton sx={{ color: '#7F7F90', mt: '26px', width: '25px', height: '25px', borderRadius: '7px', '&:hover': { color: '#D9D9E3' } }}>
+                                                <PasteIcon sx={{ fontSize: '15px' }} />
+                                            </IconButton>
+                                        )}
                                     </div>
                                 );
                             }
