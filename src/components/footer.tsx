@@ -64,7 +64,7 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
             }
         } else {
             if (footer) {
-                return footer.clientHeight + 40;
+                return footer.clientHeight;
             } else {
                 return 0;
             }

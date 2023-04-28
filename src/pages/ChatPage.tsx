@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React, { useState, useEffect, useRef } from 'react';
 import { Typography, IconButton, Stack } from '@mui/material';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
@@ -62,7 +63,12 @@ const ChatPage = () => {
     // when page is loaded, scroll to the bottom of the page
     useEffect(() => {
         if (scrollableDiv.current) {
-            scrollableDiv.current.scrollTo(0, scrollableDiv.current.scrollHeight);
+            scrollableDiv.current.scrollTop = scrollableDiv.current.scrollHeight;
+            setTimeout(() => {
+                if (scrollableDiv.current) {
+                    scrollableDiv.current.scrollTop = scrollableDiv.current.scrollHeight;
+                }
+            }, 100);
         }
     }, [messages, width]);
 
@@ -93,7 +99,7 @@ const ChatPage = () => {
 
     const handleMessageWidth = () => {
         if (width < 1000) {
-            return '100%';
+            return 'calc(100% - 40px)';
         } else {
             return '45%';
         }
@@ -105,7 +111,7 @@ const ChatPage = () => {
                 {width > 1000 && <SideBar />}
             </div>
             {width < 1000 && <Topper />}
-            <div id='main' style={{ width: handleWidthMain(), height: height, overflowY: 'auto', marginTop: '40px' }} ref={scrollableDiv}>
+            <div id='main' style={{ width: handleWidthMain(), height: height, overflowY: 'auto', marginTop: width > 1000 ? '' : '40px' }} ref={scrollableDiv}>
                 <div id='center' style={{ width: '100%' }}>
                     <Stack direction='column-reverse' sx={{ width: '100%', height: '100%' }}>
                         {messages.map((message, index) => {
@@ -114,7 +120,14 @@ const ChatPage = () => {
                                 let code: boolean = false;
                                 let codeBlock: string[] = [];
                                 return (
-                                    <div key={index} style={{ backgroundColor: '#444654', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                                    <div
+                                        key={index}
+                                        style={{
+                                            backgroundColor: '#444654',
+                                            width: '100%',
+                                            display: 'flex',
+                                            justifyContent: 'center'
+                                        }}>
                                         <Icon role={message.author} />
                                         <div style={{ width: handleMessageWidth(), marginBottom: '15px', marginTop: '15px' }}>
                                             {content.map((line, index) => {
@@ -128,7 +141,6 @@ const ChatPage = () => {
                                                                 key={index}
                                                                 variant='body1'
                                                                 sx={{
-                                                                    width: '93%',
                                                                     color: '#343541',
                                                                     fontFamily: 'Noto Sans',
                                                                     fontSize: '0.95rem',
@@ -141,7 +153,8 @@ const ChatPage = () => {
                                                                     userSelect: 'none',
                                                                     WebkitUserSelect: 'none',
                                                                     MozUserSelect: 'none',
-                                                                    msUserSelect: 'none'
+                                                                    msUserSelect: 'none',
+                                                                    mr: '1rem'
                                                                 }}>
                                                                 .
                                                             </Typography>
@@ -150,8 +163,7 @@ const ChatPage = () => {
                                                         const codeBlockString = codeBlock.join('\n');
                                                         return (
                                                             // code block end
-                                                            // TODO: fix message width overflowing in mobile.
-                                                            <div key={index} style={{ width: '93%' }}>
+                                                            <div key={index}>
                                                                 <Typography
                                                                     variant='body1'
                                                                     component={'pre'}
@@ -165,8 +177,10 @@ const ChatPage = () => {
                                                                         pt: '20px',
                                                                         pb: '10px',
                                                                         overflowX: 'auto',
-                                                                        pl: '20px',
-                                                                        pr: '10px'
+                                                                        pl: '2rem',
+                                                                        pr: '1rem',
+                                                                        maxWidth: '100%',
+                                                                        mr: '1rem'
                                                                     }}>
                                                                     {codeBlockString}
                                                                 </Typography>
@@ -188,7 +202,8 @@ const ChatPage = () => {
                                                                         MozUserSelect: 'none',
                                                                         msUserSelect: 'none',
                                                                         pl: '20px',
-                                                                        pr: '10px'
+                                                                        pr: '10px',
+                                                                        mr: '1rem'
                                                                     }}>
                                                                     .
                                                                 </Typography>
@@ -210,7 +225,7 @@ const ChatPage = () => {
                                                                     fontSize: '0.95rem',
                                                                     lineHeight: '1.8',
                                                                     pl: '1rem',
-                                                                    pr: '1rem'
+                                                                    maxWidth: '100%'
                                                                 }}>
                                                                 {line}
                                                             </Typography>
@@ -242,7 +257,8 @@ const ChatPage = () => {
                                                     p: '1rem',
                                                     lineHeight: '2',
                                                     mt: '10px',
-                                                    mb: '10px'
+                                                    mb: '10px',
+                                                    maxWidth: '100%'
                                                 }}>
                                                 {message.content}
                                             </Typography>

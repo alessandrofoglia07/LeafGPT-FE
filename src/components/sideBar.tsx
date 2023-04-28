@@ -27,7 +27,6 @@ const SideBar = () => {
             try {
                 const res = await axios.get('http://localhost:5000/api/chat/getChats', { headers: { Authorization: authHeader() } });
                 setChats(res.data);
-                console.log(1);
             } catch (err) {
                 console.log(err);
             }
