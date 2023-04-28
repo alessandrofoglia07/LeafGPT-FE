@@ -4,7 +4,7 @@ import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import { useNavigate } from 'react-router-dom';
 
-const Topper = () => {
+const Topper = (props: { chatTitle: string }) => {
     const navigate = useNavigate();
 
     const handleNewChat = () => {
@@ -36,7 +36,7 @@ const Topper = () => {
                 <MenuRoundedIcon />
             </IconButton>
             <Typography variant='h6' sx={{ color: 'rgba(217,217,227)', fontSize: '1rem', mt: '3px' }}>
-                New chat
+                {props.chatTitle}
             </Typography>
             <IconButton
                 onClick={handleNewChat}

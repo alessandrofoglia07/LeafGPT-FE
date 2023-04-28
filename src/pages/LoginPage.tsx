@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Stack, Typography, TextField, Button, Link, Snackbar, Alert, IconButton } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import forestTheme from '../forestTheme';
@@ -20,6 +20,10 @@ const LoginPage = () => {
     const [serverError, setServerError] = useState(false);
     const [emailNotVerifiedError, setEmailNotVerifiedError] = useState(false);
     const [unknownError, setUnknownError] = useState(false);
+
+    useEffect(() => {
+        document.title = 'Log in to ForestAI';
+    }, []);
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Typography, TextField, Button, Link, Snackbar, Alert, Stack, IconButton } from '@mui/material';
 import Visibility from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOff from '@mui/icons-material/VisibilityOffOutlined';
@@ -14,6 +14,10 @@ const SignupPage = () => {
     const [verificationEmailSent, setVerificationEmailSent] = useState(false);
     const [passwordTooShort, setPasswordTooShort] = useState(false);
     const [emailNotvalid, setEmailNotvalid] = useState(false);
+
+    useEffect(() => {
+        document.title = 'Sign up to ForestAI';
+    }, []);
 
     const emailRegex =
         /^("(?:[!#-[\]-\u{10FFFF}]|\\[\t -\u{10FFFF}])*"|[!#-'*+\-/-9=?A-Z^-\u{10FFFF}](?:\.?[!#-'*+\-/-9=?A-Z^-\u{10FFFF}])*)@([!#-'*+\-/-9=?A-Z^-\u{10FFFF}](?:\.?[!#-'*+\-/-9=?A-Z^-\u{10FFFF}])*|\[[!-Z^-\u{10FFFF}]*\])$/u;

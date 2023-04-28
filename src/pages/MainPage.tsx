@@ -9,6 +9,10 @@ const MainPage = () => {
     const [newInput, setNewInput] = useState<string>('');
     const [width, setWidth] = useState<number>(window.innerWidth);
 
+    useEffect(() => {
+        document.title = 'New chat';
+    }, []);
+
     const handleHeightChange = (height: number) => {
         setFooterHeight(height);
     };
@@ -50,7 +54,7 @@ const MainPage = () => {
                 {width > 1000 && <SideBar />}
             </div>
             <div id='main' style={{ width: handleMainWidth(), height: '100vh', display: 'flex', justifyContent: 'center' }}>
-                {width < 1000 && <Topper />}
+                {width < 1000 && <Topper chatTitle='New chat' />}
                 <Center setInput={setInput} footerHeight={footerHeight} />
                 <Footer setHeight={handleHeightChange} newInput={newInput} />
             </div>

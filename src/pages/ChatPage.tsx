@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable array-callback-return */
 import React, { useState, useEffect, useRef } from 'react';
 import { Typography, IconButton, Stack } from '@mui/material';
@@ -25,6 +26,7 @@ const ChatPage = () => {
     const [footerHeight, setFooterHeight] = useState<number>(0);
     const [height, setHeight] = useState<string>('calc(100vh - 64px)');
     const [width, setWidth] = useState<number>(window.innerWidth);
+    const [title, setTitle] = useState<string>('');
 
     useEffect(() => {
         const updateWidth = () => {
@@ -57,8 +59,22 @@ const ChatPage = () => {
     // at the beginning, get all messages
     useEffect(() => {
         getMessages();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const getTitle = async () => {
+        const res = await axios.get(`http://localhost:5000/api/chat/getChatTitleByID/${id}`, { headers: { Authorization: authHeader() } });
+        const data = res.data;
+        setTitle(data);
+    };
+
+    useEffect(() => {
+        setTimeout(() => {
+            getTitle();
+        }, 100);
+        if (title !== document.title) {
+            document.title = title;
+        }
+    }, [title]);
 
     // when page is loaded, scroll to the bottom of the page
     useEffect(() => {
@@ -78,7 +94,6 @@ const ChatPage = () => {
                 getMessages();
             }
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket]);
 
     const handleWidthSide = () => {
@@ -110,7 +125,7 @@ const ChatPage = () => {
             <div id='side' style={{ width: handleWidthSide(), height: '100%' }}>
                 {width > 1000 && <SideBar />}
             </div>
-            {width < 1000 && <Topper />}
+            {width < 1000 && <Topper chatTitle={title} />}
             <div id='main' style={{ width: handleWidthMain(), height: height, overflowY: 'auto', marginTop: width > 1000 ? '' : '40px' }} ref={scrollableDiv}>
                 <div id='center' style={{ width: '100%' }}>
                     <Stack direction='column-reverse' sx={{ width: '100%', height: '100%' }}>
@@ -180,32 +195,13 @@ const ChatPage = () => {
                                                                         pl: '2rem',
                                                                         pr: '1rem',
                                                                         maxWidth: '100%',
-                                                                        mr: '1rem'
-                                                                    }}>
-                                                                    {codeBlockString}
-                                                                </Typography>
-
-                                                                <Typography
-                                                                    variant='body1'
-                                                                    sx={{
-                                                                        color: 'black',
-                                                                        fontFamily: 'Noto Sans',
-                                                                        fontSize: '0.95rem',
-                                                                        lineHeight: '1',
-                                                                        mb: '20px',
-                                                                        backgroundColor: 'black',
+                                                                        mr: '1rem',
+                                                                        mb: '30px',
                                                                         borderBottomLeftRadius: '7px',
                                                                         borderBottomRightRadius: '7px',
-                                                                        pointerEvents: 'none',
-                                                                        userSelect: 'none',
-                                                                        WebkitUserSelect: 'none',
-                                                                        MozUserSelect: 'none',
-                                                                        msUserSelect: 'none',
-                                                                        pl: '20px',
-                                                                        pr: '10px',
-                                                                        mr: '1rem'
+                                                                        letterSpacing: '-0.2px'
                                                                     }}>
-                                                                    .
+                                                                    {codeBlockString}
                                                                 </Typography>
                                                             </div>
                                                         );
