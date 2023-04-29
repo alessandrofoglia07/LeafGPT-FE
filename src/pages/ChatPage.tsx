@@ -156,7 +156,7 @@ const ChatPage = () => {
                                                                 key={index}
                                                                 variant='body1'
                                                                 sx={{
-                                                                    color: '#343541',
+                                                                    color: 'transparent',
                                                                     fontFamily: 'Noto Sans',
                                                                     fontSize: '0.95rem',
                                                                     lineHeight: '2',
@@ -231,7 +231,11 @@ const ChatPage = () => {
                                             })}
                                         </div>
                                         {width > 1000 && (
-                                            <IconButton sx={{ color: '#7F7F90', mt: '26px', width: '25px', height: '25px', borderRadius: '7px', '&:hover': { color: '#D9D9E3' } }}>
+                                            <IconButton
+                                                onClick={() => {
+                                                    navigator.clipboard.writeText(message.content);
+                                                }}
+                                                sx={{ color: '#7F7F90', mt: '26px', width: '25px', height: '25px', borderRadius: '7px', '&:hover': { color: '#D9D9E3' } }}>
                                                 <PasteIcon sx={{ fontSize: '15px' }} />
                                             </IconButton>
                                         )}
@@ -260,7 +264,11 @@ const ChatPage = () => {
                                             </Typography>
                                         </div>
                                         {width > 1000 && (
-                                            <IconButton sx={{ color: '#7F7F90', mt: '26px', width: '25px', height: '25px', borderRadius: '7px', '&:hover': { color: '#D9D9E3' } }}>
+                                            <IconButton
+                                                onClick={() => {
+                                                    navigator.clipboard.writeText(message.content);
+                                                }}
+                                                sx={{ color: '#7F7F90', mt: '26px', width: '25px', height: '25px', borderRadius: '7px', '&:hover': { color: '#D9D9E3' } }}>
                                                 <PasteIcon sx={{ fontSize: '15px' }} />
                                             </IconButton>
                                         )}
