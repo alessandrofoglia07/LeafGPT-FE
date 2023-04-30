@@ -56,18 +56,10 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
 
     const getFooterHeight = () => {
         const footer = document.getElementById('Footer');
-        if (width < 1000) {
-            if (footer) {
-                return footer.clientHeight;
-            } else {
-                return 0;
-            }
+        if (footer) {
+            return footer.clientHeight;
         } else {
-            if (footer) {
-                return footer.clientHeight;
-            } else {
-                return 0;
-            }
+            return 0;
         }
     };
 
@@ -143,7 +135,7 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
 
     const handleMT = () => {
         if (width < 1000) {
-            return '5px';
+            return '0px';
         } else {
             return '32px';
         }

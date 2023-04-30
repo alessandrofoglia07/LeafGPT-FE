@@ -61,7 +61,7 @@ const SideBar = () => {
 
     return (
         <div id='SideBar'>
-            <AppBar position='static' sx={{ bgcolor: '#202123', height: '100vh', width: '260px' }}>
+            <AppBar position='static' sx={{ bgcolor: '#202123', height: '100vh', width: '260px', position: 'fixed', zIndex: '100' }}>
                 <Toolbar sx={{ width: '100%', height: '100%', position: 'relative', right: '25px' }}>
                     <Stack direction='column' display='flex' alignItems='center' spacing={2} sx={{ width: '100%', height: '100%' }}>
                         <ThemeProvider theme={forestTheme}>
@@ -89,7 +89,7 @@ const SideBar = () => {
                                         sx={{ textTransform: 'none', height: '46px', width: '244px', mb: '5px', borderRadius: '5px', justifyContent: 'left', ml: '7px' }}
                                         startIcon={<ChatBubbleOutlineRoundedIcon fontSize='small' sx={{ ml: '7px' }} />}
                                         href={`/c/${chat._id}`}>
-                                        <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>{chat.title}</Typography>
+                                        <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>{chat.title.replaceAll('"', '')}</Typography>
                                     </Button>
                                 ))}
                             </div>

@@ -21,6 +21,56 @@ code {
     transform: translate(-50%, -50%);
 }
 
+.sidebar-enter {
+    position: fixed;
+    left: -270px;
+    top: 0;
+    width: 270px;
+    height: 100%;
+    z-index: 92;
+}
+
+.sidebar-enter-active {
+    left: 0;
+    transition: all 200ms ease-in-out;
+}
+
+.sidebar-exit {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 270px;
+    height: 100%;
+    z-index: 92;
+}
+
+.sidebar-exit-active {
+    left: -270px;
+    transition: all 200ms ease-in-out;
+}
+
+.shadow {
+    opacity: 0.2;
+}
+
+.shadow-enter {
+    opacity: 0;
+}
+
+.shadow-enter-active {
+    opacity: 0.2;
+    transition: all 200ms ease-in-out;
+}
+
+.shadow-exit {
+    opacity: 0.2;
+}
+
+.shadow-exit-active {
+    opacity: 0;
+    transition: all 200ms ease-in-out;
+}
+
 /* ===== Scrollbar CSS ===== */
 /* Firefox */
 * {
