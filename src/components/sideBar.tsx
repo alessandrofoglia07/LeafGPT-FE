@@ -22,23 +22,27 @@ const SideBar = () => {
     const [chats, setChats] = useState<any[]>([]);
     const [deleteConfirmation, setDeleteConfirmation] = useState<boolean>(false);
 
-    useEffect(() => {
-        const getChats = async () => {
-            try {
-                const res = await axios.get('http://localhost:5000/api/chat/getChats', { headers: { Authorization: authHeader() } });
-                setChats(res.data);
-            } catch (err) {
-                console.log(err);
-            }
-        };
+    const getChats = async () => {
+        try {
+            const res = await axios.get('http://localhost:5000/api/chat/getChats', { headers: { Authorization: authHeader() } });
+            setChats(res.data);
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
+    useEffect(() => {
         socket.on('updatedChats', () => {
             getChats();
         });
-        getChats();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket]);
+
+    useEffect(() => {
+        getChats();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleNewChat = () => {
         navigate('/');

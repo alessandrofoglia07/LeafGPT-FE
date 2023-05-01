@@ -91,7 +91,7 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
 
                 const res = await axios.post(
                     'http://localhost:5000/api/chat/createMessage',
-                    { message: { author: 'user', content: message }, chatID: undefined },
+                    { message: { role: 'user', content: message }, chatID: undefined },
                     { headers: { Authorization: authHeader() } }
                 );
 
@@ -101,11 +101,7 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
                 navigate(`/c/${chatID}`);
             } else if (window.location.pathname.match(chatPathRegex)) {
                 const chatID = window.location.pathname.split('/')[2];
-                await axios.post(
-                    'http://localhost:5000/api/chat/createMessage',
-                    { message: { author: 'user', content: message }, chatID },
-                    { headers: { Authorization: authHeader() } }
-                );
+                await axios.post('http://localhost:5000/api/chat/createMessage', { message: { role: 'user', content: message }, chatID }, { headers: { Authorization: authHeader() } });
             }
         } catch (err) {
             console.log(err);

@@ -5,7 +5,7 @@ import { Typography, IconButton, Stack } from '@mui/material';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import Footer from '../components/footer';
 import SideBar from '../components/sideBar';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuthHeader } from 'react-auth-kit';
 import io from 'socket.io-client';
@@ -19,10 +19,13 @@ const PasteIcon = ContentPasteIcon;
 const ChatPage = () => {
     const { id } = useParams<{ id: string }>();
     const authHeader = useAuthHeader();
+    const navigate = useNavigate();
 
     const scrollableDiv = useRef<HTMLDivElement>(null);
 
-    const [messages, setMessages] = useState<{ author: 'user' | 'assistant'; content: string }[]>([]);
+    /* IMPORTANT: messages are stored from the oldest to the newest
+        [0] is the oldest message, [length - 1] is the newest message */
+    const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
     const [footerHeight, setFooterHeight] = useState<number>(0);
     const [height, setHeight] = useState<string>('calc(100vh - 64px)');
     const [width, setWidth] = useState<number>(window.innerWidth);
@@ -53,7 +56,7 @@ const ChatPage = () => {
     const getMessages = async () => {
         const res = await axios.get(`http://localhost:5000/api/chat/getMessagesByChatID/${id}`, { headers: { Authorization: authHeader() } });
         const data = res.data;
-        setMessages(data);
+        setMessages(data.reverse());
     };
 
     // at the beginning, get all messages
@@ -64,6 +67,9 @@ const ChatPage = () => {
     const getTitle = async () => {
         const res = await axios.get(`http://localhost:5000/api/chat/getChatTitleByID/${id}`, { headers: { Authorization: authHeader() } });
         const data = res.data;
+        if (data === 'Chat not found') {
+            navigate('/');
+        }
         setTitle(data);
     };
 
@@ -92,6 +98,17 @@ const ChatPage = () => {
         socket.on('newMessage', (data: { chatID: string }) => {
             if (data.chatID === id) {
                 getMessages();
+            }
+        });
+
+        socket.on('chatgptResChunk', (data: { chatID: string; content: string }) => {
+            if (data.chatID === id) {
+                setMessages((messages) => {
+                    if (messages[messages.length - 1]?.role === 'user') {
+                        return [...messages, { role: 'assistant', content: data.content }];
+                    }
+                    return [...messages.slice(0, -1), { role: 'assistant', content: data.content }];
+                });
             }
         });
     }, [socket]);
@@ -128,9 +145,9 @@ const ChatPage = () => {
             {width < 1000 && <Topper chatTitle={title} />}
             <div id='main' style={{ width: handleWidthMain(), height: height, overflowY: 'auto', marginTop: width > 1000 ? '' : '40px' }} ref={scrollableDiv}>
                 <div id='center' style={{ width: '100%' }}>
-                    <Stack direction='column-reverse' sx={{ width: '100%', height: '100%' }}>
+                    <Stack direction='column' sx={{ width: '100%', height: '100%' }}>
                         {messages.map((message, index) => {
-                            if (message.author === 'assistant' && message.content.includes('\n' || '```' || '`')) {
+                            if (message.role === 'assistant' && message.content.includes('\n' || '```' || '`')) {
                                 const content: string[] = message.content.split('\n' || '```');
                                 let code: boolean = false;
                                 let codeBlock: string[] = [];
@@ -143,7 +160,7 @@ const ChatPage = () => {
                                             display: 'flex',
                                             justifyContent: 'center'
                                         }}>
-                                        <Icon role={message.author} />
+                                        <Icon role={message.role} />
                                         <div style={{ width: handleMessageWidth(), marginBottom: '15px', marginTop: '15px' }}>
                                             {content.map((line, index) => {
                                                 if (line.includes('```')) {
@@ -245,13 +262,13 @@ const ChatPage = () => {
                                 return (
                                     <div
                                         key={index}
-                                        style={{ backgroundColor: message.author === 'user' ? '#343541' : '#444654', width: '100%', display: 'flex', justifyContent: 'center' }}>
-                                        <Icon role={message.author} />
+                                        style={{ backgroundColor: message.role === 'user' ? '#343541' : '#444654', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                                        <Icon role={message.role} />
                                         <div style={{ width: handleMessageWidth() }}>
                                             <Typography
                                                 variant='body1'
                                                 sx={{
-                                                    color: message.author === 'user' ? 'white' : '#D1D5D2',
+                                                    color: message.role === 'user' ? 'white' : '#D1D5D2',
                                                     fontFamily: 'Noto Sans',
                                                     fontSize: '0.95rem',
                                                     p: '1rem',
