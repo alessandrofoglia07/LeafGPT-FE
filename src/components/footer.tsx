@@ -213,7 +213,7 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
                         multiline
                         maxRows={8}
                     />
-                    <Typography variant='body2' sx={{ color: '#929398', fontFamily: 'Noto Sans', fontSize: '12px', mb: '15px', textAlign: 'center' }}>
+                    <Typography variant='body2' sx={{ color: '#C5C5D2', fontFamily: 'Noto Sans', fontSize: '12px', mb: '15px', textAlign: 'center' }}>
                         Powered by GPT-3.5. LeafGPT may produce inaccurate information about people, places, or facts.
                     </Typography>
                 </Stack>

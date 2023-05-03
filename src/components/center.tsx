@@ -83,7 +83,7 @@ const Center = (props: { footerHeight: number; setInput: (input: string) => void
                 </Typography>
                 <div id='presentation'>
                     <Stack direction={handleDirection()} display='flex' textAlign='center' spacing={2} width={handleWidth()}>
-                        <div id='examples'>
+                        <div id='examples' style={{ width: width > 1000 ? 'calc(100% / 3)' : 'auto' }}>
                             {width > 1000 && <SunIcon sx={{ color: 'white' }} />}
                             <Typography
                                 variant='h6'
@@ -100,10 +100,10 @@ const Center = (props: { footerHeight: number; setInput: (input: string) => void
                                 {width < 1000 && <SunIcon fontSize='small' sx={{ color: 'white', mr: '5px' }} />} Examples
                             </Typography>
                             <Button handleClick={handlePresentationButtonClick} clickable content='"Explain photosynthesis in simple terms"' />
-                            <Button handleClick={handlePresentationButtonClick} clickable content='"Can you recommend some good science fiction books to read?"' />
+                            <Button handleClick={handlePresentationButtonClick} clickable content='"Can you recommend some good science books to read?"' />
                             <Button handleClick={handlePresentationButtonClick} clickable content='"Why is typescript better than javascript?"' />
                         </div>
-                        <div id='capabilities'>
+                        <div id='capabilities' style={{ width: width > 1000 ? 'calc(100% / 3)' : 'auto' }}>
                             {width > 1000 && <BoltIcon sx={{ color: 'white' }} />}
                             <Typography
                                 variant='h6'
@@ -123,7 +123,7 @@ const Center = (props: { footerHeight: number; setInput: (input: string) => void
                             <Button handleClick={handlePresentationButtonClick} content='Allows user to provide follow-up corrections' />
                             <Button handleClick={handlePresentationButtonClick} content='Trained to decline inappropriate requests 😑' />
                         </div>
-                        <div id='limitations'>
+                        <div id='limitations' style={{ width: width > 1000 ? 'calc(100% / 3)' : 'auto' }}>
                             {width > 1000 && <WarningIcon sx={{ color: 'white' }} />}
                             <Typography
                                 variant='h6'
