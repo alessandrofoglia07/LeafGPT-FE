@@ -151,7 +151,7 @@ const ChatPage = () => {
     return (
         <div id='ChatPage' style={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center' }}>
             <div id='side' style={{ width: handleWidthSide(), height: '100%' }}>
-                {width > 1000 && <SideBar />}
+                {width > 1000 && <SideBar activeChat={title} />}
             </div>
             {width < 1000 && <Topper chatTitle={title} />}
             <div id='main' style={{ width: handleWidthMain(), height: height, overflowY: 'auto', marginTop: width > 1000 ? '' : '40px' }} ref={scrollableDiv}>

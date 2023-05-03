@@ -14,7 +14,7 @@ import io from 'socket.io-client';
 
 const socket = io('http://localhost:5000');
 
-const SideBar = () => {
+const SideBar = (props: { activeChat?: string }) => {
     const authHeader = useAuthHeader();
     const navigate = useNavigate();
     const signOut = useSignOut();
@@ -78,31 +78,56 @@ const SideBar = () => {
                                     width: '244px',
                                     mt: '10px',
                                     borderRadius: '5px',
-                                    borderColor: '#555559'
+                                    borderColor: '#555559',
+                                    '&:hover': { borderColor: '#555559' }
                                 }}
                                 onClick={handleNewChat}>
                                 <AddIcon fontSize='small' sx={{ position: 'relative', right: '70px', bottom: '1px' }} />
                                 <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans', position: 'relative', right: '60px' }}>New chat</Typography>
                             </Button>
-                            <div style={{ marginTop: '10px', overflowY: 'auto', height: 'calc(100% - 179px)' }}>
-                                {chats.map((chat) => (
-                                    <Button
-                                        key={chat._id}
-                                        variant='text'
-                                        color='info'
-                                        sx={{ textTransform: 'none', height: '46px', width: '244px', mb: '5px', borderRadius: '5px', justifyContent: 'left', ml: '7px' }}
-                                        startIcon={<ChatBubbleOutlineRoundedIcon fontSize='small' sx={{ ml: '7px' }} />}
-                                        href={`/c/${chat._id}`}>
-                                        <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>{chat.title.replaceAll('"', '')}</Typography>
-                                    </Button>
-                                ))}
+                            <div style={{ marginTop: '20px', overflowY: 'auto', height: 'calc(100% - 179px)' }}>
+                                <Stack>
+                                    {chats.map((chat) => {
+                                        const title = chat.title.replaceAll('"', '');
+                                        return (
+                                            <Button
+                                                key={chat._id}
+                                                variant='text'
+                                                color='info'
+                                                sx={{
+                                                    textTransform: 'none',
+                                                    height: '40px',
+                                                    width: '244px',
+                                                    mb: '5px',
+                                                    borderRadius: '5px',
+                                                    justifyContent: 'left',
+                                                    bgcolor: title === props.activeChat ? '#343541' : '#202123',
+                                                    '&:hover': { bgcolor: title === props.activeChat ? '#343541' : '#2A2B32' }
+                                                }}
+                                                startIcon={<ChatBubbleOutlineRoundedIcon fontSize='small' sx={{ ml: '7px' }} />}
+                                                href={`/c/${chat._id}`}>
+                                                <Typography sx={{ fontSize: '0.8rem', fontFamily: 'Noto Sans' }}>{title}</Typography>
+                                            </Button>
+                                        );
+                                    })}
+                                </Stack>
                             </div>
                             <div style={{ position: 'absolute', bottom: '0px', borderTop: '1px solid #4D4D4F', right: '23px' }}>
                                 {!deleteConfirmation ? (
                                     <Button
                                         variant='text'
                                         color='info'
-                                        sx={{ textTransform: 'none', height: '46px', width: '244px', mb: '5px', borderRadius: '5px', justifyContent: 'left', ml: '25px', mt: '5px' }}
+                                        sx={{
+                                            textTransform: 'none',
+                                            height: '46px',
+                                            width: '244px',
+                                            mb: '5px',
+                                            borderRadius: '5px',
+                                            justifyContent: 'left',
+                                            ml: '30px',
+                                            mt: '5px',
+                                            '&:hover': { bgcolor: '#343541' }
+                                        }}
                                         startIcon={<DeleteOutlinedIcon fontSize='small' sx={{ ml: '7px' }} />}
                                         onClick={handleClearConversations}>
                                         <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>Clear conversations</Typography>
@@ -111,7 +136,17 @@ const SideBar = () => {
                                     <Button
                                         variant='text'
                                         color='info'
-                                        sx={{ textTransform: 'none', height: '46px', width: '244px', mb: '5px', borderRadius: '5px', justifyContent: 'left', ml: '25px', mt: '5px' }}
+                                        sx={{
+                                            textTransform: 'none',
+                                            height: '46px',
+                                            width: '244px',
+                                            mb: '5px',
+                                            borderRadius: '5px',
+                                            justifyContent: 'left',
+                                            ml: '30px',
+                                            mt: '5px',
+                                            '&:hover': { bgcolor: '#343541' }
+                                        }}
                                         startIcon={<CheckRoundedIcon fontSize='small' sx={{ ml: '7px' }} />}
                                         onClick={handleClearConversations}>
                                         <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>Confirm clear conversations</Typography>
@@ -121,7 +156,16 @@ const SideBar = () => {
                                 <Button
                                     variant='text'
                                     color='info'
-                                    sx={{ textTransform: 'none', height: '46px', width: '244px', mb: '10px', borderRadius: '5px', justifyContent: 'left', ml: '25px' }}
+                                    sx={{
+                                        textTransform: 'none',
+                                        height: '46px',
+                                        width: '244px',
+                                        mb: '10px',
+                                        borderRadius: '5px',
+                                        justifyContent: 'left',
+                                        ml: '30px',
+                                        '&:hover': { bgcolor: '#343541' }
+                                    }}
                                     startIcon={<LogoutRoundedIcon fontSize='small' sx={{ ml: '11px' }} />}
                                     onClick={handleLogOut}>
                                     <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>Log out</Typography>
