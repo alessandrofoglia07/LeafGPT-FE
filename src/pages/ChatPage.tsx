@@ -11,6 +11,8 @@ import { useAuthHeader } from 'react-auth-kit';
 import io from 'socket.io-client';
 import Icon from '../components/icon';
 import Topper from '../components/topper';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/atom-one-dark.css';
 
 const socket = io('http://localhost:5000');
 
@@ -113,6 +115,15 @@ const ChatPage = () => {
         });
     }, [socket]);
 
+    const getLanguage = (codeBlock: string) => {
+        const language = hljs.highlightAuto(codeBlock || '').language;
+        return language;
+    };
+
+    useEffect(() => {
+        hljs.highlightAll();
+    }, [messages, socket]);
+
     const handleWidthSide = () => {
         if (width < 1000) {
             return '0px';
@@ -173,7 +184,7 @@ const ChatPage = () => {
                                                                 key={index}
                                                                 variant='body1'
                                                                 sx={{
-                                                                    color: 'transparent',
+                                                                    color: '#343541',
                                                                     fontFamily: 'Noto Sans',
                                                                     fontSize: '0.95rem',
                                                                     lineHeight: '2',
@@ -201,15 +212,12 @@ const ChatPage = () => {
                                                                     component={'pre'}
                                                                     sx={{
                                                                         color: '#D1D5D2',
-                                                                        fontFamily: 'FireCode',
-                                                                        fontSize: '0.9rem',
+                                                                        fontSize: '1rem',
                                                                         lineHeight: '1.4',
                                                                         bgcolor: 'black',
                                                                         paddingTop: '0.25rem',
-                                                                        pt: '20px',
-                                                                        pb: '10px',
                                                                         overflowX: 'auto',
-                                                                        pl: '2rem',
+                                                                        pl: '1rem',
                                                                         pr: '1rem',
                                                                         maxWidth: '100%',
                                                                         mr: '1rem',
@@ -218,7 +226,11 @@ const ChatPage = () => {
                                                                         borderBottomRightRadius: '7px',
                                                                         letterSpacing: '-0.2px'
                                                                     }}>
-                                                                    {codeBlockString}
+                                                                    <code
+                                                                        className={`language-${getLanguage(codeBlockString)}`}
+                                                                        style={{ backgroundColor: 'black', maxWidth: '100%', height: '100%' }}>
+                                                                        {codeBlockString}
+                                                                    </code>
                                                                 </Typography>
                                                             </div>
                                                         );
