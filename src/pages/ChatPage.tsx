@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Typography, IconButton, Stack } from '@mui/material';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
+import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
 import Footer from '../components/footer';
 import SideBar from '../components/sideBar';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -17,13 +18,14 @@ import 'highlight.js/styles/atom-one-dark.css';
 const socket = io('http://localhost:5000');
 
 const PasteIcon = ContentPasteIcon;
+const DownIcon = ArrowDownwardRoundedIcon;
 
 const ChatPage = () => {
     const { id } = useParams<{ id: string }>();
     const authHeader = useAuthHeader();
     const navigate = useNavigate();
 
-    const scrollableDiv = useRef<HTMLDivElement>(null);
+    const scrollDiv = useRef<HTMLDivElement>(null);
 
     /* IMPORTANT: messages are stored from the oldest to the newest
         [0] is the oldest message, [length - 1] is the newest message */
@@ -32,6 +34,7 @@ const ChatPage = () => {
     const [height, setHeight] = useState<string>('calc(100vh - 64px)');
     const [width, setWidth] = useState<number>(window.innerWidth);
     const [title, setTitle] = useState<string>('');
+    const [scrolledToBottom, setScrolledToBottom] = useState<boolean>(true);
 
     useEffect(() => {
         const updateWidth = () => {
@@ -84,17 +87,43 @@ const ChatPage = () => {
         }
     }, [title]);
 
-    // when page is loaded, scroll to the bottom of the page
-    useEffect(() => {
-        if (scrollableDiv.current) {
-            scrollableDiv.current.scrollTop = scrollableDiv.current.scrollHeight;
+    const scrollToBottom = () => {
+        if (scrollDiv.current) {
+            scrollDiv.current.scrollTo({
+                top: scrollDiv.current.scrollHeight,
+                behavior: 'auto'
+            });
             setTimeout(() => {
-                if (scrollableDiv.current) {
-                    scrollableDiv.current.scrollTop = scrollableDiv.current.scrollHeight;
+                if (scrollDiv.current) {
+                    scrollDiv.current.scrollTo({
+                        top: scrollDiv.current.scrollHeight,
+                        behavior: 'auto'
+                    });
                 }
             }, 100);
         }
-    }, [messages, width]);
+    };
+
+    const smoothScrollToBottom = () => {
+        if (scrollDiv.current) {
+            scrollDiv.current.scrollTo({
+                top: scrollDiv.current.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+    };
+
+    const handleDivScroll = (e: any) => {
+        const bottom: boolean = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+        if (bottom !== scrolledToBottom) {
+            setScrolledToBottom(bottom);
+        }
+    };
+
+    // when page is loaded, scroll to the bottom of the page
+    useEffect(() => {
+        scrollToBottom();
+    }, [width]);
 
     useEffect(() => {
         socket.on('newMessage', (data: { chatID: string }) => {
@@ -154,7 +183,7 @@ const ChatPage = () => {
                 {width > 1000 && <SideBar activeChat={title} />}
             </div>
             {width < 1000 && <Topper chatTitle={title} />}
-            <div id='main' style={{ width: handleWidthMain(), height: height, overflowY: 'auto', marginTop: width > 1000 ? '' : '40px' }} ref={scrollableDiv}>
+            <div id='main' style={{ width: handleWidthMain(), height: height, overflowY: 'auto', marginTop: width > 1000 ? '' : '40px' }} ref={scrollDiv} onScroll={handleDivScroll}>
                 <div id='center' style={{ width: '100%' }}>
                     <Stack direction='column' sx={{ width: '100%', height: '100%' }}>
                         {messages.map((message, index) => {
@@ -306,6 +335,25 @@ const ChatPage = () => {
                             }
                         })}
                     </Stack>
+                    {
+                        // to fix the scroll to bottom button
+                        !scrolledToBottom && (
+                            <IconButton
+                                onClick={smoothScrollToBottom}
+                                sx={{
+                                    position: 'fixed',
+                                    bottom: `${footerHeight + 20}px`,
+                                    right: '25px',
+                                    width: '26px',
+                                    height: '26px',
+                                    bgcolor: '#545661',
+                                    border: '1px solid #656770',
+                                    '&:hover': { bgcolor: '#545661' }
+                                }}>
+                                <DownIcon fontSize='small' sx={{ color: '#B7B8C3' }} />
+                            </IconButton>
+                        )
+                    }
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Footer setHeight={handleHeightChange} newInput='' />
