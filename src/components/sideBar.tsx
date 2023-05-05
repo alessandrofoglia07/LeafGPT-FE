@@ -79,6 +79,7 @@ const SideBar = (props: { activeChat?: string }) => {
                                     mt: '10px',
                                     borderRadius: '5px',
                                     borderColor: '#555559',
+                                    justifySelf: 'center',
                                     '&:hover': { borderColor: '#555559' }
                                 }}
                                 onClick={handleNewChat}>
@@ -90,42 +91,66 @@ const SideBar = (props: { activeChat?: string }) => {
                                     {chats.map((chat) => {
                                         const title = chat.title.replaceAll('"', '');
                                         return (
-                                            <Button
-                                                key={chat._id}
-                                                variant='text'
-                                                color='info'
-                                                sx={{
-                                                    textTransform: 'none',
-                                                    height: '40px',
-                                                    width: '244px',
-                                                    mb: '5px',
-                                                    borderRadius: '5px',
-                                                    justifyContent: 'left',
-                                                    bgcolor: title === props.activeChat ? '#343541' : '#202123',
-                                                    '&:hover': { bgcolor: title === props.activeChat ? '#343541' : '#2A2B32' }
-                                                }}
-                                                startIcon={<ChatBubbleOutlineRoundedIcon fontSize='small' sx={{ ml: '7px' }} />}
-                                                href={`/c/${chat._id}`}>
-                                                <Typography sx={{ fontSize: '0.8rem', fontFamily: 'Noto Sans' }}>{title}</Typography>
-                                            </Button>
+                                            <div id='chatBtn' style={{ width: '244px', height: '40px', marginBottom: '5px' }}>
+                                                <Button
+                                                    key={chat._id}
+                                                    variant='text'
+                                                    color='info'
+                                                    sx={{
+                                                        textTransform: 'none',
+                                                        height: '40px',
+                                                        width: '244px',
+                                                        borderRadius: '5px',
+                                                        justifyContent: 'left',
+                                                        bgcolor: title === props.activeChat ? '#343541' : '#202123',
+                                                        textOverflow: 'ellipsis',
+                                                        overflow: 'hidden',
+                                                        whiteSpace: 'nowrap',
+                                                        '&:hover': { bgcolor: title === props.activeChat ? '#343541' : '#2A2B32' }
+                                                    }}
+                                                    startIcon={<ChatBubbleOutlineRoundedIcon fontSize='small' sx={{ ml: '7px' }} />}
+                                                    href={`/c/${chat._id}`}>
+                                                    <Typography sx={{ fontSize: '0.8rem', fontFamily: 'Noto Sans' }}>{title}</Typography>
+                                                </Button>
+                                                <div
+                                                    style={{
+                                                        width: '70px',
+                                                        height: '40px',
+                                                        position: 'relative',
+                                                        bottom: '40px',
+                                                        left: '174px',
+                                                        borderTopRightRadius: '5px',
+                                                        borderBottomRightRadius: '5px',
+                                                        background: `linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, ${
+                                                            title === props.activeChat ? 'rgba(52, 53, 65, 1)' : 'rgba(32, 33, 35, 1)'
+                                                        } 100%)`,
+                                                        pointerEvents: 'none'
+                                                    }}
+                                                />
+                                            </div>
                                         );
                                     })}
                                 </Stack>
                             </div>
-                            <div style={{ position: 'absolute', bottom: '0px', borderTop: '1px solid #4D4D4F', right: '23px' }}>
+                            <div
+                                style={{
+                                    position: 'absolute',
+                                    bottom: '0px',
+                                    borderTop: '1px solid #4D4D4F',
+                                    width: '240px',
+                                    justifySelf: 'center'
+                                }}>
                                 {!deleteConfirmation ? (
                                     <Button
                                         variant='text'
                                         color='info'
                                         sx={{
                                             textTransform: 'none',
-                                            height: '46px',
+                                            height: '40px',
                                             width: '244px',
-                                            mb: '5px',
                                             borderRadius: '5px',
                                             justifyContent: 'left',
-                                            ml: '30px',
-                                            mt: '5px',
+                                            mt: '10px',
                                             '&:hover': { bgcolor: '#343541' }
                                         }}
                                         startIcon={<DeleteOutlinedIcon fontSize='small' sx={{ ml: '7px' }} />}
@@ -138,13 +163,11 @@ const SideBar = (props: { activeChat?: string }) => {
                                         color='info'
                                         sx={{
                                             textTransform: 'none',
-                                            height: '46px',
+                                            height: '40px',
                                             width: '244px',
-                                            mb: '5px',
                                             borderRadius: '5px',
                                             justifyContent: 'left',
-                                            ml: '30px',
-                                            mt: '5px',
+                                            mt: '10px',
                                             '&:hover': { bgcolor: '#343541' }
                                         }}
                                         startIcon={<CheckRoundedIcon fontSize='small' sx={{ ml: '7px' }} />}
@@ -158,12 +181,12 @@ const SideBar = (props: { activeChat?: string }) => {
                                     color='info'
                                     sx={{
                                         textTransform: 'none',
-                                        height: '46px',
+                                        height: '40px',
                                         width: '244px',
                                         mb: '10px',
+                                        mt: '5px',
                                         borderRadius: '5px',
                                         justifyContent: 'left',
-                                        ml: '30px',
                                         '&:hover': { bgcolor: '#343541' }
                                     }}
                                     startIcon={<LogoutRoundedIcon fontSize='small' sx={{ ml: '11px' }} />}

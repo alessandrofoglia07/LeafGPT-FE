@@ -12,10 +12,49 @@ import { useAuthHeader } from 'react-auth-kit';
 import io from 'socket.io-client';
 import Icon from '../components/icon';
 import Topper from '../components/topper';
-import hljs from 'highlight.js';
+import hljs from 'highlight.js/lib/core';
+import javascript from 'highlight.js/lib/languages/javascript';
+import typescript from 'highlight.js/lib/languages/typescript';
+import python from 'highlight.js/lib/languages/python';
+import cpp from 'highlight.js/lib/languages/cpp';
+import java from 'highlight.js/lib/languages/java';
+import csharp from 'highlight.js/lib/languages/csharp';
+import php from 'highlight.js/lib/languages/php';
+import sql from 'highlight.js/lib/languages/sql';
+import css from 'highlight.js/lib/languages/css';
+import xml from 'highlight.js/lib/languages/xml';
+import json from 'highlight.js/lib/languages/json';
+import dockerfile from 'highlight.js/lib/languages/dockerfile';
+import markdown from 'highlight.js/lib/languages/markdown';
+import bash from 'highlight.js/lib/languages/bash';
+import lua from 'highlight.js/lib/languages/lua';
+import ruby from 'highlight.js/lib/languages/ruby';
+import r from 'highlight.js/lib/languages/r';
+import go from 'highlight.js/lib/languages/go';
+import c from 'highlight.js/lib/languages/c';
 import 'highlight.js/styles/atom-one-dark.css';
 
 const socket = io('http://localhost:5000');
+
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('typescript', typescript);
+hljs.registerLanguage('python', python);
+hljs.registerLanguage('cpp', cpp);
+hljs.registerLanguage('java', java);
+hljs.registerLanguage('csharp', csharp);
+hljs.registerLanguage('php', php);
+hljs.registerLanguage('sql', sql);
+hljs.registerLanguage('css', css);
+hljs.registerLanguage('xml', xml);
+hljs.registerLanguage('json', json);
+hljs.registerLanguage('dockerfile', dockerfile);
+hljs.registerLanguage('markdown', markdown);
+hljs.registerLanguage('bash', bash);
+hljs.registerLanguage('lua', lua);
+hljs.registerLanguage('ruby', ruby);
+hljs.registerLanguage('r', r);
+hljs.registerLanguage('go', go);
+hljs.registerLanguage('c', c);
 
 const PasteIcon = ContentPasteIcon;
 const DownIcon = ArrowDownwardRoundedIcon;
@@ -135,10 +174,27 @@ const ChatPage = () => {
         socket.on('chatgptResChunk', (data: { chatID: string; content: string }) => {
             if (data.chatID === id) {
                 setMessages((messages) => {
+                    if (scrolledToBottom) {
+                        scrollToBottom();
+                    }
                     if (messages[messages.length - 1]?.role === 'user') {
                         return [...messages, { role: 'assistant', content: data.content }];
                     }
                     return [...messages.slice(0, -1), { role: 'assistant', content: data.content }];
+                });
+            }
+        });
+
+        socket.on('resError', (data: { chatID: string; error: unknown }) => {
+            if (data.chatID === id) {
+                setMessages((messages) => {
+                    if (scrolledToBottom) {
+                        scrollToBottom();
+                    }
+                    if (messages[messages.length - 1]?.role === 'user') {
+                        return [...messages, { role: 'assistant', content: 'Error: ' + data.error }];
+                    }
+                    return [...messages.slice(0, -1), { role: 'assistant', content: 'Error: ' + data.error }];
                 });
             }
         });
@@ -147,6 +203,23 @@ const ChatPage = () => {
     const getLanguage = (codeBlock: string) => {
         const language = hljs.highlightAuto(codeBlock || '').language;
         return language;
+    };
+
+    const getLanguageTitle = (codeBlock: string) => {
+        const language = hljs.highlightAuto(codeBlock || '').language;
+        if (language === 'javascript') {
+            return 'js';
+        } else if (language === 'typescript') {
+            return 'ts';
+        } else if (language === 'cpp') {
+            return 'c++';
+        } else if (language === 'csharp') {
+            return 'c#';
+        } else if (language === 'xml') {
+            return 'html';
+        } else {
+            return language;
+        }
     };
 
     useEffect(() => {
@@ -207,41 +280,35 @@ const ChatPage = () => {
                                                     code = !code;
                                                     if (code) {
                                                         codeBlock = [];
-                                                        return (
-                                                            // code block start
-                                                            <Typography
-                                                                key={index}
-                                                                variant='body1'
-                                                                sx={{
-                                                                    color: '#343541',
-                                                                    fontFamily: 'Noto Sans',
-                                                                    fontSize: '0.95rem',
-                                                                    lineHeight: '2',
-                                                                    mt: '20px',
-                                                                    backgroundColor: '#343541',
-                                                                    borderTopLeftRadius: '7px',
-                                                                    borderTopRightRadius: '7px',
-                                                                    pointerEvents: 'none',
-                                                                    userSelect: 'none',
-                                                                    WebkitUserSelect: 'none',
-                                                                    MozUserSelect: 'none',
-                                                                    msUserSelect: 'none',
-                                                                    mr: '1rem'
-                                                                }}>
-                                                                .
-                                                            </Typography>
-                                                        );
                                                     } else {
-                                                        const codeBlockString = codeBlock.join('\n');
+                                                        const codeBlockString = codeBlock.join('\n').replace(/\t/g, '    ');
                                                         return (
                                                             // code block end
                                                             <div key={index}>
+                                                                <Typography
+                                                                    key={index}
+                                                                    variant='body1'
+                                                                    sx={{
+                                                                        color: '#D1D5D2',
+                                                                        fontFamily: 'Noto Sans',
+                                                                        fontSize: '0.75rem',
+                                                                        lineHeight: '2.5',
+                                                                        mt: '20px',
+                                                                        backgroundColor: '#343541',
+                                                                        borderTopLeftRadius: '7px',
+                                                                        borderTopRightRadius: '7px',
+                                                                        mr: '1rem',
+                                                                        pl: '1rem',
+                                                                        pr: '1rem'
+                                                                    }}>
+                                                                    {getLanguageTitle(codeBlockString)}
+                                                                </Typography>
                                                                 <Typography
                                                                     variant='body1'
                                                                     component={'pre'}
                                                                     sx={{
                                                                         color: '#D1D5D2',
-                                                                        fontSize: '1rem',
+                                                                        fontSize: '0.85rem',
                                                                         lineHeight: '1.4',
                                                                         bgcolor: 'black',
                                                                         paddingTop: '0.25rem',
@@ -257,7 +324,7 @@ const ChatPage = () => {
                                                                     }}>
                                                                     <code
                                                                         className={`language-${getLanguage(codeBlockString)}`}
-                                                                        style={{ backgroundColor: 'black', maxWidth: '100%', height: '100%' }}>
+                                                                        style={{ backgroundColor: 'black', maxWidth: '100%', height: '100%', fontFamily: 'FireCode' }}>
                                                                         {codeBlockString}
                                                                     </code>
                                                                 </Typography>
@@ -335,25 +402,22 @@ const ChatPage = () => {
                             }
                         })}
                     </Stack>
-                    {
-                        // to fix the scroll to bottom button
-                        !scrolledToBottom && (
-                            <IconButton
-                                onClick={smoothScrollToBottom}
-                                sx={{
-                                    position: 'fixed',
-                                    bottom: `${footerHeight + 20}px`,
-                                    right: '25px',
-                                    width: '26px',
-                                    height: '26px',
-                                    bgcolor: '#545661',
-                                    border: '1px solid #656770',
-                                    '&:hover': { bgcolor: '#545661' }
-                                }}>
-                                <DownIcon fontSize='small' sx={{ color: '#B7B8C3' }} />
-                            </IconButton>
-                        )
-                    }
+                    {!scrolledToBottom && (
+                        <IconButton
+                            onClick={smoothScrollToBottom}
+                            sx={{
+                                position: 'fixed',
+                                bottom: `${footerHeight + 20}px`,
+                                right: '25px',
+                                width: '26px',
+                                height: '26px',
+                                bgcolor: '#545661',
+                                border: '1px solid #656770',
+                                '&:hover': { bgcolor: '#545661' }
+                            }}>
+                            <DownIcon fontSize='small' sx={{ color: '#B7B8C3' }} />
+                        </IconButton>
+                    )}
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Footer setHeight={handleHeightChange} newInput='' />
