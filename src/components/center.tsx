@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Stack, Typography } from '@mui/material';
+import React, { useState, useEffect, useRef } from 'react';
+import { Stack, Typography, IconButton } from '@mui/material';
+import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
 import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
 import ElectricBoltOutlinedIcon from '@mui/icons-material/ElectricBoltOutlined';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
@@ -8,10 +9,38 @@ import PresentationButton from './presentationButton';
 const SunIcon = WbSunnyOutlinedIcon;
 const BoltIcon = ElectricBoltOutlinedIcon;
 const WarningIcon = WarningAmberRoundedIcon;
+const DownIcon = ArrowDownwardRoundedIcon;
 const Button = PresentationButton;
 
 const Center = (props: { footerHeight: number; setInput: (input: string) => void }) => {
+    const scrollDiv = useRef<HTMLDivElement>(null);
+
     const [width, setWidth] = useState<number>(window.innerWidth);
+    const [scrolledToBottom, setScrolledToBottom] = useState<boolean>(true);
+
+    const smoothScrollToBottom = () => {
+        if (scrollDiv.current) {
+            scrollDiv.current.scrollTo({
+                top: scrollDiv.current.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+    };
+
+    const handleDivScroll = (e: any) => {
+        const bottom: boolean = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+        if (bottom !== scrolledToBottom) {
+            setScrolledToBottom(bottom);
+        }
+    };
+
+    useEffect(() => {
+        if (width < 1000) {
+            setScrolledToBottom(false);
+        } else {
+            setScrolledToBottom(true);
+        }
+    }, [width]);
 
     const height = () => {
         if (width > 1000) {
@@ -76,9 +105,15 @@ const Center = (props: { footerHeight: number; setInput: (input: string) => void
     };
 
     return (
-        <div id='Center' style={{ width: '100%', height: height(), display: 'flex', justifyContent: 'center', overflowY: 'auto', position: 'relative', top: handleTop() }}>
+        <div
+            id='Center'
+            ref={scrollDiv}
+            onScroll={handleDivScroll}
+            style={{ width: '100%', height: height(), display: 'flex', justifyContent: 'center', overflowY: 'auto', position: 'relative', top: handleTop() }}>
             <Stack id='non-active' direction='column' display='flex' alignItems='center' spacing={-1} sx={{ maxWidth: '768px' }}>
-                <Typography variant='h4' sx={{ textAlign: 'center', color: 'White', fontFamily: 'Noto Sans', fontWeight: '800', fontSize: '2.25rem', mt: handleMT(), mb: handleMB() }}>
+                <Typography
+                    variant='h4'
+                    sx={{ textAlign: 'center', color: 'White', fontFamily: 'Noto Sans, sans-serif', fontWeight: '800', fontSize: '2.25rem', mt: handleMT(), mb: handleMB() }}>
                     LeafGPT
                 </Typography>
                 <div id='presentation'>
@@ -90,7 +125,7 @@ const Center = (props: { footerHeight: number; setInput: (input: string) => void
                                 sx={{
                                     textAlign: 'center',
                                     color: 'White',
-                                    fontFamily: 'Noto Sans',
+                                    fontFamily: 'Noto Sans, sans-serif',
                                     fontSize: '1rem',
                                     mt: '0.5rem',
                                     display: 'flex',
@@ -110,7 +145,7 @@ const Center = (props: { footerHeight: number; setInput: (input: string) => void
                                 sx={{
                                     textAlign: 'center',
                                     color: 'White',
-                                    fontFamily: 'Noto Sans',
+                                    fontFamily: 'Noto Sans, sans-serif',
                                     fontSize: '1rem',
                                     mt: '0.5rem',
                                     display: 'flex',
@@ -123,14 +158,14 @@ const Center = (props: { footerHeight: number; setInput: (input: string) => void
                             <Button handleClick={handlePresentationButtonClick} content='Allows user to provide follow-up corrections' />
                             <Button handleClick={handlePresentationButtonClick} content='Trained to decline inappropriate requests 😑' />
                         </div>
-                        <div id='limitations' style={{ width: width > 1000 ? 'calc(100% / 3)' : 'auto' }}>
+                        <div id='limitations' style={{ width: width > 1000 ? 'calc(100% / 3)' : 'auto', marginBottom: '1rem' }}>
                             {width > 1000 && <WarningIcon sx={{ color: 'white' }} />}
                             <Typography
                                 variant='h6'
                                 sx={{
                                     textAlign: 'center',
                                     color: 'White',
-                                    fontFamily: 'Noto Sans',
+                                    fontFamily: 'Noto Sans, sans-serif',
                                     fontSize: '1rem',
                                     mt: '0.5rem',
                                     display: 'flex',
@@ -146,6 +181,22 @@ const Center = (props: { footerHeight: number; setInput: (input: string) => void
                     </Stack>
                 </div>
             </Stack>
+            {!scrolledToBottom && (
+                <IconButton
+                    onClick={smoothScrollToBottom}
+                    sx={{
+                        position: 'fixed',
+                        bottom: `${props.footerHeight + 20}px`,
+                        right: '25px',
+                        width: '26px',
+                        height: '26px',
+                        bgcolor: '#545661',
+                        border: '1px solid #656770',
+                        '&:hover': { bgcolor: '#545661' }
+                    }}>
+                    <DownIcon fontSize='small' sx={{ color: '#B7B8C3' }} />
+                </IconButton>
+            )}
         </div>
     );
 };
