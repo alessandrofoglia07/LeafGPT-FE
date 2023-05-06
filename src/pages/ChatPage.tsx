@@ -207,18 +207,19 @@ const ChatPage = () => {
 
     const getLanguageTitle = (codeBlock: string) => {
         const language = hljs.highlightAuto(codeBlock || '').language;
-        if (language === 'javascript') {
-            return 'js';
-        } else if (language === 'typescript') {
-            return 'ts';
-        } else if (language === 'cpp') {
-            return 'c++';
-        } else if (language === 'csharp') {
-            return 'c#';
-        } else if (language === 'xml') {
-            return 'html';
-        } else {
-            return language;
+        switch (language) {
+            case 'javascript':
+                return 'js';
+            case 'typescript':
+                return 'ts';
+            case 'cpp':
+                return 'c++';
+            case 'csharp':
+                return 'c#';
+            case 'xml':
+                return 'html';
+            default:
+                return language;
         }
     };
 
@@ -249,6 +250,14 @@ const ChatPage = () => {
             return '45%';
         }
     };
+
+    /** 
+    This accepts: 
+    ** import React from 'react';
+    ** import { useState } from 'react';
+    ** import React, { useState } from 'react';
+    */
+    const reactRegex = /^import\s+\w+|\{.+?\}\s+from\s+'react'(;)?$/gm;
 
     return (
         <div id='ChatPage' style={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center' }}>
@@ -282,15 +291,23 @@ const ChatPage = () => {
                                                         codeBlock = [];
                                                     } else {
                                                         const codeBlockString = codeBlock.join('\n').replace(/\t/g, '    ');
+
+                                                        let languageTitle = getLanguageTitle(codeBlockString);
+                                                        if ((languageTitle === 'js' || languageTitle === 'html') && codeBlockString.match(reactRegex)) {
+                                                            languageTitle = 'jsx';
+                                                        } else if (languageTitle === 'ts' && codeBlockString.match(reactRegex)) {
+                                                            languageTitle = 'tsx';
+                                                        }
+
                                                         return (
-                                                            // code block end
+                                                            // code block
                                                             <div key={index}>
                                                                 <Typography
                                                                     key={index}
                                                                     variant='body1'
                                                                     sx={{
                                                                         color: '#D1D5D2',
-                                                                        fontFamily: 'Noto Sans',
+                                                                        fontFamily: 'Noto Sans, sans-serif',
                                                                         fontSize: '0.75rem',
                                                                         lineHeight: '2.5',
                                                                         mt: '20px',
@@ -301,7 +318,7 @@ const ChatPage = () => {
                                                                         pl: '1rem',
                                                                         pr: '1rem'
                                                                     }}>
-                                                                    {getLanguageTitle(codeBlockString)}
+                                                                    {languageTitle}
                                                                 </Typography>
                                                                 <Typography
                                                                     variant='body1'
@@ -342,7 +359,7 @@ const ChatPage = () => {
                                                                 variant='body1'
                                                                 sx={{
                                                                     color: '#D1D5D2',
-                                                                    fontFamily: 'Noto Sans',
+                                                                    fontFamily: 'Noto Sans, sans-serif',
                                                                     fontSize: '0.95rem',
                                                                     lineHeight: '1.8',
                                                                     pl: '1rem',
@@ -377,7 +394,7 @@ const ChatPage = () => {
                                                 variant='body1'
                                                 sx={{
                                                     color: message.role === 'user' ? 'white' : '#D1D5D2',
-                                                    fontFamily: 'Noto Sans',
+                                                    fontFamily: 'Noto Sans, sans-serif',
                                                     fontSize: '0.95rem',
                                                     p: '1rem',
                                                     lineHeight: '2',

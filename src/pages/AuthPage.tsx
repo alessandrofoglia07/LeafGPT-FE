@@ -19,10 +19,10 @@ const AuthPage = () => {
                 <Typography variant='h3' sx={{ mb: '10px', pointerEvents: 'none' }}>
                     🍀
                 </Typography>
-                <Typography variant='body2' sx={{ color: 'white', fontFamily: 'Noto Sans', mb: '10px' }}>
+                <Typography variant='body2' sx={{ color: 'white', fontFamily: 'Noto Sans, sans-serif', mb: '10px' }}>
                     Welcome to LeafGPT
                 </Typography>
-                <Typography variant='body2' sx={{ color: 'white', fontFamily: 'Noto Sans', mb: '10px' }}>
+                <Typography variant='body2' sx={{ color: 'white', fontFamily: 'Noto Sans, sans-serif', mb: '10px' }}>
                     Log in with your ForestAI account to continue
                 </Typography>
                 <Stack direction='row' display='flex' justifyContent='center' sx={{ mt: '5px' }}>
@@ -30,7 +30,7 @@ const AuthPage = () => {
                         variant='contained'
                         sx={{ textTransform: 'none', bgcolor: '#00A67E', borderRadius: '0.25rem', height: '35px', ml: '10px', '&:hover': { backgroundColor: '#1A7F64' } }}
                         href='/auth/login'>
-                        <Typography variant='body2' sx={{ fontFamily: 'Noto Sans', color: 'white' }}>
+                        <Typography variant='body2' sx={{ fontFamily: 'Noto Sans, sans-serif', color: 'white' }}>
                             Log in
                         </Typography>
                     </Button>
@@ -38,7 +38,7 @@ const AuthPage = () => {
                         variant='contained'
                         sx={{ textTransform: 'none', bgcolor: '#00A67E', borderRadius: '0.25rem', height: '35px', ml: '10px', '&:hover': { backgroundColor: '#1A7F64' } }}
                         href='/auth/signup'>
-                        <Typography variant='body2' sx={{ fontFamily: 'Noto Sans', color: 'white' }}>
+                        <Typography variant='body2' sx={{ fontFamily: 'Noto Sans, sans-serif', color: 'white' }}>
                             Sign up
                         </Typography>
                     </Button>

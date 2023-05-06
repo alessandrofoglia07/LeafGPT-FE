@@ -173,7 +173,7 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
                             borderRadius: '5px',
                             color: 'white',
                             minHeight: '46px',
-                            fontFamily: 'Noto Sans',
+                            fontFamily: 'Noto Sans, sans-serif',
                             mb: '10px',
                             mt: '10px',
                             boxShadow: '0px 0px 1px 1px #343541',
@@ -213,7 +213,7 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
                         multiline
                         maxRows={8}
                     />
-                    <Typography variant='body2' sx={{ color: '#C5C5D2', fontFamily: 'Noto Sans', fontSize: '12px', mb: '15px', textAlign: 'center' }}>
+                    <Typography variant='body2' sx={{ color: '#C5C5D2', fontFamily: 'Noto Sans, sans-serif', fontSize: '12px', mb: '15px', textAlign: 'center' }}>
                         Powered by GPT-3.5. LeafGPT may produce inaccurate information about people, places, or facts.
                     </Typography>
                 </Stack>

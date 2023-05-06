@@ -74,10 +74,10 @@ const SignupPage = () => {
             </Typography>
             <form autoComplete='off' onSubmit={handleConfirm}>
                 <Stack spacing={2} direction='column' textAlign='center' alignItems='center' sx={{ width: '100%', maxWidth: '350px', mt: '250px' }}>
-                    <Typography variant='h4' sx={{ fontFamily: 'Noto Sans', letterSpacing: '-1px' }}>
+                    <Typography variant='h4' sx={{ fontFamily: 'Noto Sans, sans-serif', letterSpacing: '-1px' }}>
                         <b>Create your account</b>
                     </Typography>
-                    <Typography variant='body2' sx={{ fontFamily: 'Noto Sans' }}>
+                    <Typography variant='body2' sx={{ fontFamily: 'Noto Sans, sans-serif' }}>
                         Please note that you will be sent a confirmation email to verify your account.
                     </Typography>
                     <ThemeProvider theme={forestTheme}>
@@ -112,7 +112,7 @@ const SignupPage = () => {
                         <Button variant='contained' type='submit' color='primary' sx={{ width: 'calc(100% - 20px)', height: '50px' }}>
                             Continue
                         </Button>
-                        <Typography variant='body2' sx={{ fontFamily: 'Noto Sans' }}>
+                        <Typography variant='body2' sx={{ fontFamily: 'Noto Sans, sans-serif' }}>
                             Already have an account?{' '}
                             <Link color='primary' href='/auth/login' sx={{ textDecoration: 'none' }}>
                                 Log in

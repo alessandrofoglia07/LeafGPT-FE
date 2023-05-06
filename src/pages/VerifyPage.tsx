@@ -41,7 +41,7 @@ const VerifyPage = () => {
             <Stack spacing={2} direction='column' textAlign='center' alignItems='center' sx={{ width: '100%', maxWidth: '350px', mt: '270px' }}>
                 {verificationResult ? (
                     <ThemeProvider theme={forestTheme}>
-                        <Typography variant='h4' sx={{ fontFamily: 'Noto Sans', letterSpacing: '-1px', width: '350px', mb: '20px' }}>
+                        <Typography variant='h4' sx={{ fontFamily: 'Noto Sans, sans-serif', letterSpacing: '-1px', width: '350px', mb: '20px' }}>
                             <b>{verificationResult}</b> <br /> <br />
                             <Link href='/auth/login' color='primary' underline='hover'>
                                 <b>Log in</b>
@@ -49,7 +49,7 @@ const VerifyPage = () => {
                         </Typography>
                     </ThemeProvider>
                 ) : (
-                    <Typography variant='h4' sx={{ fontFamily: 'Noto Sans', letterSpacing: '-1px', width: '350px', mb: '20px' }}>
+                    <Typography variant='h4' sx={{ fontFamily: 'Noto Sans, sans-serif', letterSpacing: '-1px', width: '350px', mb: '20px' }}>
                         <strong>Verifying...</strong>
                     </Typography>
                 )}

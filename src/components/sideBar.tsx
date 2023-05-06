@@ -84,7 +84,7 @@ const SideBar = (props: { activeChat?: string }) => {
                                 }}
                                 onClick={handleNewChat}>
                                 <AddIcon fontSize='small' sx={{ position: 'relative', right: '70px', bottom: '1px' }} />
-                                <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans', position: 'relative', right: '60px' }}>New chat</Typography>
+                                <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans, sans-serif', position: 'relative', right: '60px' }}>New chat</Typography>
                             </Button>
                             <div style={{ marginTop: '20px', overflowY: 'auto', height: 'calc(100% - 179px)' }}>
                                 <Stack>
@@ -110,7 +110,7 @@ const SideBar = (props: { activeChat?: string }) => {
                                                     }}
                                                     startIcon={<ChatBubbleOutlineRoundedIcon fontSize='small' sx={{ ml: '7px' }} />}
                                                     href={`/c/${chat._id}`}>
-                                                    <Typography sx={{ fontSize: '0.8rem', fontFamily: 'Noto Sans' }}>{title}</Typography>
+                                                    <Typography sx={{ fontSize: '0.8rem', fontFamily: 'Noto Sans, sans-serif' }}>{title}</Typography>
                                                 </Button>
                                                 <div
                                                     style={{
@@ -155,7 +155,7 @@ const SideBar = (props: { activeChat?: string }) => {
                                         }}
                                         startIcon={<DeleteOutlinedIcon fontSize='small' sx={{ ml: '7px' }} />}
                                         onClick={handleClearConversations}>
-                                        <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>Clear conversations</Typography>
+                                        <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans, sans-serif' }}>Clear conversations</Typography>
                                     </Button>
                                 ) : (
                                     <Button
@@ -172,7 +172,7 @@ const SideBar = (props: { activeChat?: string }) => {
                                         }}
                                         startIcon={<CheckRoundedIcon fontSize='small' sx={{ ml: '7px' }} />}
                                         onClick={handleClearConversations}>
-                                        <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>Confirm clear conversations</Typography>
+                                        <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans, sans-serif' }}>Confirm clear conversations</Typography>
                                     </Button>
                                 )}
 
@@ -191,7 +191,7 @@ const SideBar = (props: { activeChat?: string }) => {
                                     }}
                                     startIcon={<LogoutRoundedIcon fontSize='small' sx={{ ml: '11px' }} />}
                                     onClick={handleLogOut}>
-                                    <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans' }}>Log out</Typography>
+                                    <Typography sx={{ fontSize: '0.83rem', fontFamily: 'Noto Sans, sans-serif' }}>Log out</Typography>
                                 </Button>
                             </div>
                         </ThemeProvider>

@@ -74,7 +74,7 @@ const PresentationButton = (props: { content: string; clickable?: boolean; handl
                     variant='h6'
                     sx={{
                         padding: '0.7rem 0rem',
-                        fontFamily: 'Noto Sans',
+                        fontFamily: 'Noto Sans, sans-serif',
                         fontSize: '0.8rem',
                         lineHeight: '1.25rem',
                         textTransform: 'none'
