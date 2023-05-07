@@ -54,6 +54,8 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+<br/><br/><br/>
+
 ## About me 🧙‍♂️
 
 I'm Alex 🪐, a highschool student from Italy. I'm a self-taught developer and I'm currently studying web development, using React ⚛️, NodeJS and Typescript.
