@@ -1,11 +1,10 @@
 # LeafGPT 💬
 
-LeafGPT is an open source ChatGPT clone, created with React (frontend) and NodeJS (backend).
+LeafGPT is an open source ChatGPT website's original design clone, created with React (frontend) and NodeJS (backend).
 It works the same as ChatGPT, but it's open source and you can host it yourself.
 
 Note that
 
--   this project is still in development (doesn't have a build yet)
 -   this is not a fork of ChatGPT, it's a complete rewrite from scratch
 -   this is powered by GPT-3.5 model by OpenAI
 -   you can contribute to this project by opening a pull request or an issue
@@ -36,7 +35,7 @@ The frontend is built with React (Typescript) using:
 
 In the project directory, you can run:
 
-### `npm start`
+### `npm run dev`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
