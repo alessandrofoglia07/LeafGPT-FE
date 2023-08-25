@@ -45,8 +45,7 @@ const SignupPage = () => {
             return;
         }
         // if email is valid and password is at least 8 characters, send email
-        const res = await axios.post('http://localhost:5000/api/auth/sendVerificationEmail', { email, password });
-        console.log(res.data);
+        const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/sendVerificationEmail`, { email, password });
         // if email is already registered, show error
         if (res.data.message === 'Email already registered') {
             setEmailAlreadyExists(true);

@@ -37,7 +37,7 @@ const LoginPage = () => {
 
     const handleConfirm = async (e: React.FormEvent) => {
         e.preventDefault();
-        const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+        const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, { email, password });
         if (res.data.message === 'Login successful') {
             if (
                 signIn({

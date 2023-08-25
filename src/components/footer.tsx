@@ -5,10 +5,12 @@ import axios from 'axios';
 import { useAuthHeader } from 'react-auth-kit';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
+import KeyIcon from '@mui/icons-material/KeyRounded';
+import ApiKey from '../utils/apiKey';
 
-const socket = io('http://localhost:5000');
+const socket = io(process.env.REACT_APP_API_URL as string);
 
-const Footer = (props: { setHeight: (height: number) => void; newInput: string }) => {
+const Footer = (props: { setHeight: (height: number) => void; newInput: string; openModal: () => void }) => {
     const authHeader = useAuthHeader();
     const navigate = useNavigate();
 
@@ -84,6 +86,12 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
 
         try {
             setCanSubmit(false);
+
+            if (!ApiKey.get()) {
+                props.openModal();
+                return;
+            }
+
             if (window.location.pathname === '/') {
                 socket.on('newChat', (data: { chatID: string }) => {
                     navigate(`/c/${data.chatID}`);
@@ -91,7 +99,7 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
 
                 const res = await axios.post(
                     'http://localhost:5000/api/chat/createMessage',
-                    { message: { role: 'user', content: message }, chatID: undefined },
+                    { message: { role: 'user', content: message }, chatID: undefined, key: ApiKey.get() || '' },
                     { headers: { Authorization: authHeader() } }
                 );
 
@@ -156,63 +164,70 @@ const Footer = (props: { setHeight: (height: number) => void; newInput: string }
             }}>
             <form autoComplete='off' style={{ width: '100%', height: '100%', display: 'flex' }} onSubmit={handleSubmit}>
                 <Stack direction='column' display='flex' alignItems='center' justifyContent='center' sx={{ width: '100%', height: '100%', mt: handleMT() }}>
-                    <TextField
-                        id='input'
-                        autoFocus
-                        placeholder='Send a message...'
-                        variant='outlined'
-                        value={input}
-                        onChange={handleInputChange}
-                        onKeyDown={handleEnter}
-                        onPaste={handlePaste}
-                        sx={{
-                            maxWidth: '768px',
-                            width: '90%',
-                            position: 'relative',
-                            backgroundColor: '#40414F',
-                            borderRadius: '5px',
-                            color: 'white',
-                            minHeight: '46px',
-                            fontFamily: 'Noto Sans, sans-serif',
-                            mb: '10px',
-                            mt: '10px',
-                            boxShadow: '0px 0px 1px 1px #343541',
-                            '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-                                borderWidth: 'inherit'
-                            },
-                            '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                borderWidth: 'inherit'
-                            },
-                            '& .MuiInputBase-input': {
-                                fontSize: '16px',
-                                lineHeight: '1',
-                                width: 'calc(100% - 40px)'
-                            }
-                        }}
-                        InputProps={{
-                            style: {
-                                color: 'white'
-                            },
-                            endAdornment: (
-                                <IconButton
-                                    type='submit'
-                                    sx={{
-                                        color: '#5A5B6B',
-                                        position: 'absolute',
-                                        bottom: '9px',
-                                        right: '15px',
-                                        width: '30px',
-                                        height: '30px',
-                                        borderRadius: '10px',
-                                        '&:hover': { backgroundColor: '#202123' }
-                                    }}>
-                                    <SendOutlinedIcon fontSize='small' />
-                                </IconButton>
-                            )
-                        }}
-                        multiline
-                        maxRows={8}
-                    />
+                    <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+                        <TextField
+                            id='input'
+                            autoFocus
+                            placeholder='Send a message...'
+                            variant='outlined'
+                            value={input}
+                            onChange={handleInputChange}
+                            onKeyDown={handleEnter}
+                            onPaste={handlePaste}
+                            sx={{
+                                maxWidth: '768px',
+                                width: '90%',
+                                position: 'relative',
+                                backgroundColor: '#40414F',
+                                borderRadius: '5px',
+                                color: 'white',
+                                minHeight: '46px',
+                                fontFamily: 'Noto Sans, sans-serif',
+                                mb: '10px',
+                                mt: '10px',
+                                boxShadow: '0px 0px 1px 1px #343541',
+                                '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
+                                    borderWidth: 'inherit'
+                                },
+                                '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                    borderWidth: 'inherit'
+                                },
+                                '& .MuiInputBase-input': {
+                                    fontSize: '16px',
+                                    lineHeight: '1',
+                                    width: 'calc(100% - 40px)'
+                                }
+                            }}
+                            InputProps={{
+                                style: {
+                                    color: 'white'
+                                },
+                                endAdornment: (
+                                    <IconButton
+                                        type='submit'
+                                        sx={{
+                                            color: '#5A5B6B',
+                                            position: 'absolute',
+                                            bottom: '9px',
+                                            right: '15px',
+                                            width: '30px',
+                                            height: '30px',
+                                            borderRadius: '10px',
+                                            '&:hover': { backgroundColor: '#202123' }
+                                        }}>
+                                        <SendOutlinedIcon fontSize='small' />
+                                    </IconButton>
+                                )
+                            }}
+                            multiline
+                            maxRows={8}
+                        />
+                        {!!props.openModal && (
+                            <IconButton onClick={props.openModal} disableRipple sx={{ bgcolor: '#00A67E' }}>
+                                <KeyIcon sx={{ color: '#C5C5D2' }} />
+                            </IconButton>
+                        )}
+                    </div>
                     <Typography variant='body2' sx={{ color: '#C5C5D2', fontFamily: 'Noto Sans, sans-serif', fontSize: '12px', mb: '15px', textAlign: 'center' }}>
                         Powered by GPT-3.5. LeafGPT may produce inaccurate information about people, places, or facts.
                     </Typography>

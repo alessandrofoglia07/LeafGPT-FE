@@ -33,8 +33,10 @@ import r from 'highlight.js/lib/languages/r';
 import go from 'highlight.js/lib/languages/go';
 import c from 'highlight.js/lib/languages/c';
 import 'highlight.js/styles/atom-one-dark.css';
+import Modal from '../components/apiKeyModal';
+import ApiKey from '../utils/apiKey';
 
-const socket = io('http://localhost:5000');
+const socket = io(process.env.REACT_APP_API_URL as string);
 
 hljs.registerLanguage('javascript', javascript);
 hljs.registerLanguage('typescript', typescript);
@@ -74,6 +76,7 @@ const ChatPage = () => {
     const [width, setWidth] = useState<number>(window.innerWidth);
     const [title, setTitle] = useState<string>('');
     const [scrolledToBottom, setScrolledToBottom] = useState<boolean>(true);
+    const [open, setOpen] = useState<boolean>(!ApiKey.get());
 
     useEffect(() => {
         const updateWidth = () => {
@@ -98,7 +101,7 @@ const ChatPage = () => {
     }, [footerHeight, width]);
 
     const getMessages = async () => {
-        const res = await axios.get(`http://localhost:5000/api/chat/getMessagesByChatID/${id}`, { headers: { Authorization: authHeader() } });
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/chat/getMessagesByChatID/${id}`, { headers: { Authorization: authHeader() } });
         const data = res.data;
         setMessages(data.reverse());
     };
@@ -109,7 +112,7 @@ const ChatPage = () => {
     }, []);
 
     const getTitle = async () => {
-        const res = await axios.get(`http://localhost:5000/api/chat/getChatTitleByID/${id}`, { headers: { Authorization: authHeader() } });
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/chat/getChatTitleByID/${id}`, { headers: { Authorization: authHeader() } });
         const data = res.data;
         if (data === 'Chat not found') {
             navigate('/');
@@ -437,8 +440,17 @@ const ChatPage = () => {
                     )}
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Footer setHeight={handleHeightChange} newInput='' />
+                    <Footer
+                        setHeight={handleHeightChange}
+                        newInput=''
+                        openModal={() =>
+                            setTimeout(() => {
+                                setOpen(true);
+                            }, 200)
+                        }
+                    />
                 </div>
+                <Modal open={open} setOpen={setOpen} />
             </div>
         </div>
     );

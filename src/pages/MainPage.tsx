@@ -3,11 +3,14 @@ import SideBar from '../components/sideBar';
 import Footer from '../components/footer';
 import Center from '../components/center';
 import Topper from '../components/topper';
+import ApiKey from '../utils/apiKey';
+import Modal from '../components/apiKeyModal';
 
 const MainPage = () => {
     const [footerHeight, setFooterHeight] = useState<number>(0);
     const [newInput, setNewInput] = useState<string>('');
     const [width, setWidth] = useState<number>(window.innerWidth);
+    const [open, setOpen] = useState<boolean>(!ApiKey.get());
 
     useEffect(() => {
         document.title = 'New chat';
@@ -56,7 +59,8 @@ const MainPage = () => {
             <div id='main' style={{ width: handleMainWidth(), height: '100vh', display: 'flex', justifyContent: 'center' }}>
                 {width < 1000 && <Topper chatTitle='New chat' />}
                 <Center setInput={setInput} footerHeight={footerHeight} />
-                <Footer setHeight={handleHeightChange} newInput={newInput} />
+                <Footer setHeight={handleHeightChange} newInput={newInput} openModal={() => setOpen(true)} />
+                <Modal open={open} setOpen={setOpen} />
             </div>
         </div>
     );

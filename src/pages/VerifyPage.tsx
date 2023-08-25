@@ -16,7 +16,7 @@ const VerifyPage = () => {
 
         const verifyEmail = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/auth/verify/${token}`);
+                const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/auth/verify/${token}`);
                 if (res && res.data) {
                     setVerificationResult(res.data.message);
                 } else {
